@@ -40,18 +40,18 @@ void setup() {
 
   //  bleKeyboard.begin();
 }
- String test;
+String test;
 void loop()
 {
-  randomString();
-  Serial.println(password_buf);
-  save_encode_credential(SPIFFS, "/test.txt",password_buf, "teehazzan@gmail.com", "greentestcred" );
-  read_decode_credential(SPIFFS, "/test.txt");
-
-  //  char cstr[33];
-  //  itoa(random(100000000, 999999999), cstr, 32);
+  //  randomString();
+  //  Serial.println(password_buf);
+  //  save_encode_credential(SPIFFS, "/test.txt",password_buf, "teehazzan@gmail.com", "greentestcred" );
+  //  read_decode_credential(SPIFFS, "/test.txt");
+      
+    char cstr[33];
+    itoa(random(100000000, 999999999), cstr, 32);
   //  create_user(SPIFFS, "/33", cstr );
-  //  read_create_user(SPIFFS, "/0", cstr );
+    getUserNumber(cstr );
   //  delay(5000);
   //  randomString();
 

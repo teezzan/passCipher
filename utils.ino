@@ -1,4 +1,4 @@
-int user_number = 0;
+int user_number = 10;
 char* lcase = "abcdefghijklmnopqrstuvwxyz";
 char* ucase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 char* symbols = "!$%^@#*.:;,?-_<>=";
@@ -130,19 +130,33 @@ bool read_create_user(fs::FS &fs, const char * path, char * key) {
 bool randomString() {
   memset( password_buf, 0, sizeof( password_buf ) );
   int i = 0;
-  
-  while(i<10) {
-    password_buf[i] = ucase[random(0, strlen(ucase)-1)];
+
+  while (i < 10) {
+    password_buf[i] = ucase[random(0, strlen(ucase) - 1)];
     i++;
   }
-  while(i<20) {
-    password_buf[i] = symbols[random(0, strlen(symbols)-1)];
+  while (i < 20) {
+    password_buf[i] = symbols[random(0, strlen(symbols) - 1)];
     i++;
   }
-  while(i<33) {
-    password_buf[i] = lcase[random(0, strlen(lcase)-1)];
+  while (i < 33) {
+    password_buf[i] = lcase[random(0, strlen(lcase) - 1)];
     i++;
   }
-  password_buf[33]='\0';
+  password_buf[33] = '\0';
   return true;
+}
+
+int getUserNumber(char * key) {
+  int user = -1;
+  char str[4] = "/";
+  for (int i = 0; i < user_number; i++) {
+    sprintf(&str[1], "%d", i);
+    //    if (read_create_user(SPIFFS, str, key )) {
+    //      user = i;
+    //      break;
+    //    }
+    Serial.println(str);
+  }
+  return user;
 }
