@@ -47,12 +47,25 @@ void loop()
   //  Serial.println(password_buf);
   //  save_encode_credential(SPIFFS, "/test.txt",password_buf, "teehazzan@gmail.com", "greentestcred" );
   //  read_decode_credential(SPIFFS, "/test.txt");
-      
-    char cstr[33];
-    itoa(random(100000000, 999999999), cstr, 32);
-  //  create_user(SPIFFS, "/33", cstr );
-    getUserNumber(cstr );
-  //  delay(5000);
+  char cstr1[33];
+  char cstr2[33];
+  char cstr0[33];
+  
+  itoa(random(100000000, 999999999), cstr0, 32);
+  create_user(SPIFFS, "/0", cstr0 );
+
+
+  itoa(random(100000000, 999999999), cstr1, 32);
+  create_user(SPIFFS, "/1", cstr1 );
+
+  itoa(random(100000000, 999999999), cstr2, 32);
+  create_user(SPIFFS, "/2", cstr2 );
+  delay(5000);
+
+
+  Serial.println(getUserNumber(cstr0 ));
+  Serial.println(getUserNumber(cstr1 ));
+  Serial.println(getUserNumber(cstr2 ));
   //  randomString();
 
   Serial.print("»» LOOP ENDED. Free heap: "); Serial.println(ESP.getFreeHeap());

@@ -1,4 +1,4 @@
-int user_number = 10;
+int user_number = 3;
 char* lcase = "abcdefghijklmnopqrstuvwxyz";
 char* ucase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 char* symbols = "!$%^@#*.:;,?-_<>=";
@@ -117,9 +117,9 @@ bool read_create_user(fs::FS &fs, const char * path, char * key) {
 
 
   decrypt(cipherTextOutput, fullkey, decipheredTextOutput);
-  Serial.println("\n\nDeciphered text:");
+  
   if ((char)decipheredTextOutput[0] == 'd' && (char)decipheredTextOutput[1] == 'o' && (char)decipheredTextOutput[2] == 'n' && (char)decipheredTextOutput[3] == 'e' ) {
-    Serial.println("True User detected");
+//    Serial.println("True User detected");
     return true;
   }
 
@@ -152,11 +152,10 @@ int getUserNumber(char * key) {
   char str[4] = "/";
   for (int i = 0; i < user_number; i++) {
     sprintf(&str[1], "%d", i);
-    //    if (read_create_user(SPIFFS, str, key )) {
-    //      user = i;
-    //      break;
-    //    }
-    Serial.println(str);
+        if (read_create_user(SPIFFS, str, key )) {
+          user = i;
+          break;
+        }
   }
   return user;
 }
