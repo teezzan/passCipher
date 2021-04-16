@@ -14,6 +14,8 @@ char * key = "abcdefghijklmnop";
 uint8_t iv[16] = {0x1f, 0xa8, 0x57, 0xe3, 0x4f, 0x78, 0xbe, 0x68, 0x8c, 0xb2, 0x44, 0x01, 0x27, 0x9b, 0xee, 0xf5};
 unsigned char cipherTextOutput[64];
 unsigned char decipheredTextOutput[64];
+char password_buf[33];
+
 
 struct cred {
   char  password[64];
@@ -38,18 +40,21 @@ void setup() {
 
   //  bleKeyboard.begin();
 }
-
+ String test;
 void loop()
 {
+  randomString();
+  Serial.println(password_buf);
+  save_encode_credential(SPIFFS, "/test.txt",password_buf, "teehazzan@gmail.com", "greentestcred" );
+  read_decode_credential(SPIFFS, "/test.txt");
 
-//    save_encode_credential(SPIFFS, "/test.txt", "The heck", "teehazzan@gmail.com", "greentestcred" );
-//    read_decode_credential(SPIFFS, "/test.txt");
+  //  char cstr[33];
+  //  itoa(random(100000000, 999999999), cstr, 32);
+  //  create_user(SPIFFS, "/33", cstr );
+  //  read_create_user(SPIFFS, "/0", cstr );
+  //  delay(5000);
+  //  randomString();
 
-  char cstr[33];
-  itoa(random(100000000,999999999), cstr, 32);
-  create_user(SPIFFS, "/0", cstr );
-  read_create_user(SPIFFS, "/0", cstr );
-  
   Serial.print("»» LOOP ENDED. Free heap: "); Serial.println(ESP.getFreeHeap());
   delay(5000);
 

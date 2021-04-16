@@ -1,7 +1,9 @@
 int user_number = 0;
+char* lcase = "abcdefghijklmnopqrstuvwxyz";
+char* ucase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+char* symbols = "!$%^@#*.:;,?-_<>=";
 
-
-bool save_encode_credential(fs::FS &fs, const char * path,  char * password, const char * email, const char * username ) {
+bool save_encode_credential(fs::FS &fs, const char * path, const char * password, const char * email, const char * username ) {
 
   struct storage user;
   encrypt(password, key, user.password);
@@ -98,8 +100,6 @@ bool read_create_user(fs::FS &fs, const char * path, char * key) {
   strcpy(fullkey, key);
   strcat(fullkey, key);
   strncat(fullkey, key, 4);
-  Serial.print("fullkey = ");
-  Serial.println(fullkey);
 
   memset( cipherTextOutput, 0, sizeof( cipherTextOutput ) );
   memset( decipheredTextOutput, 0, sizeof( decipheredTextOutput ) );
@@ -125,4 +125,24 @@ bool read_create_user(fs::FS &fs, const char * path, char * key) {
 
   return false;
 
+}
+
+bool randomString() {
+  memset( password_buf, 0, sizeof( password_buf ) );
+  int i = 0;
+  
+  while(i<10) {
+    password_buf[i] = ucase[random(0, strlen(ucase)-1)];
+    i++;
+  }
+  while(i<20) {
+    password_buf[i] = symbols[random(0, strlen(symbols)-1)];
+    i++;
+  }
+  while(i<33) {
+    password_buf[i] = lcase[random(0, strlen(lcase)-1)];
+    i++;
+  }
+  password_buf[33]='\0';
+  return true;
 }

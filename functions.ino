@@ -31,7 +31,7 @@ void listDir(fs::FS &fs, const char * dirname, uint8_t levels) {
   }
 }
 
-void encrypt(char * plainText, char * key, unsigned char * outputBuffer){
+void encrypt(const char * plainText, char * key, unsigned char * outputBuffer){
 
   mbedtls_aes_context aes;
 
