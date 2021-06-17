@@ -1,4 +1,4 @@
-int user_number = 1;
+
 char* lcase = "abcdefghijklmnopqrstuvwxyz";
 char* ucase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 char* symbols = "!$%^@#*.:;,?-_<>=";
@@ -51,7 +51,7 @@ bool save_user_credential(const char * website, const char * password, const cha
   strcat(str, "/");
   strcat(str, website);
   strcat(str, ".txt\0");
-  
+
   Serial.println(str);
   deleteFile(SPIFFS, str);
   return save_encode_credential(SPIFFS, str, key, password, email, username );
@@ -99,10 +99,10 @@ bool read_decode_credential(fs::FS &fs, const char * path,  char * key ) {
 
 
 bool read_user_credential(const char * website ) {
-//  char fullkey[17];
-//  strcpy(fullkey, key);
-//  strcat(fullkey, key);
-//  strncat(fullkey, key, 4);
+  //  char fullkey[17];
+  //  strcpy(fullkey, key);
+  //  strcat(fullkey, key);
+  //  strncat(fullkey, key, 4);
 
   char str[32];
   char buf[4];
@@ -114,7 +114,7 @@ bool read_user_credential(const char * website ) {
   strcat(str, website);
   strcat(str, ".txt\0");
   Serial.println(str);
-  
+
   return read_decode_credential(SPIFFS, str, key );
 
 }
@@ -125,6 +125,9 @@ bool create_user(fs::FS &fs, const char * path, char * key) {
   strcpy(fullkey, key);
   strcat(fullkey, key);
   strncat(fullkey, key, 4);
+
+  char str[4] = "/";
+  sprintf(&str[1], "%d", user_number);
 
   memset( cipherTextOutput, 0, sizeof( cipherTextOutput ) );
   encrypt("done", fullkey, cipherTextOutput);
@@ -142,6 +145,68 @@ bool create_user(fs::FS &fs, const char * path, char * key) {
   file.write((const uint8_t *)cipherTextOutput, sizeof(cipherTextOutput));
   file.close();
   Serial.println(" Done Writing ");
+
+
+  return true;
+
+}
+
+bool read_user_number(fs::FS &fs) {
+  File file = fs.open("/usernum.txt", FILE_READ);
+
+  if (!file) {
+    Serial.println("- failed to open file for writing");
+    return false;
+  }
+  int i = 0;
+  char num[5] = "";
+  while (file.available()) {
+    num[i] = file.read();
+    i++;
+  }
+  Serial.print("user_number = ");
+  Serial.println(num);
+  user_number = atoi (num);
+  
+  file.close();
+  return true;
+
+
+}
+
+bool increase_user_number(fs::FS &fs) {
+  File file = fs.open("/usernum.txt", FILE_WRITE);
+
+  if (!file) {
+    Serial.println("- failed to open file for writing");
+    return false;
+  }
+  if (file.print(String(user_number + 1).c_str())) {
+    user_number++;
+    Serial.println("File write success");
+  } else {
+    Serial.println("File write failed");
+  }
+  file.close();
+  return true;
+
+
+}
+
+bool decrease_user_number(fs::FS &fs) {
+  File file = fs.open("/usernum.txt", FILE_WRITE);
+
+  if (!file) {
+    Serial.println("- failed to open file for writing");
+    return false;
+  }
+  if (file.print(String(user_number - 1).c_str())) {
+    Serial.println("File write success");
+    user_number--;
+  } else {
+    Serial.println("File write failed");
+  }
+  file.close();
   return true;
 
 }
@@ -153,9 +218,10 @@ bool read_create_user(fs::FS &fs, const char * path, char * key) {
   strcat(fullkey, key);
   strncat(fullkey, key, 4);
 
+
   memset( cipherTextOutput, 0, sizeof( cipherTextOutput ) );
   memset( decipheredTextOutput, 0, sizeof( decipheredTextOutput ) );
-//  encrypt("done", fullkey, cipherTextOutput);
+  //  encrypt("done", fullkey, cipherTextOutput);
 
   //read from memory
   File file = fs.open(path, FILE_READ);

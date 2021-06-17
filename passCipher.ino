@@ -10,7 +10,7 @@
 BleKeyboard bleKeyboard;
 
 
-
+int user_number = 0;
 uint8_t iv[16] = {0x1f, 0xa8, 0x57, 0xe3, 0x4f, 0x78, 0xbe, 0x68, 0x8c, 0xb2, 0x44, 0x01, 0x27, 0x9b, 0xee, 0xf5};
 unsigned char cipherTextOutput[64];
 unsigned char decipheredTextOutput[64];
@@ -33,9 +33,9 @@ struct cred user_out;
 
 
 char key[33];
-char key1[33]="s079q7";
-char key2[33]="p19c72";
-char key3[33]="it8vu6";
+char key1[33] = "s079q7";
+char key2[33] = "p19c72";
+char key3[33] = "it8vu6";
 int current_user_number = 0;
 
 void setup() {
@@ -51,8 +51,12 @@ void setup() {
 String test;
 void loop()
 {
-
-  Serial.println(key1);
+  read_user_number(SPIFFS);
+  increase_user_number(SPIFFS);
+  read_user_number(SPIFFS);
+  decrease_user_number(SPIFFS);
+  
+  
   Serial.print("»» LOOP ENDED. Free heap: "); Serial.println(ESP.getFreeHeap());
   delay(1000);
 

@@ -39,3 +39,21 @@
   //  Serial.println(getUserNumber(cstr1 ));
   //  Serial.println(getUserNumber(cstr2 ));
   //  //  randomString();
+
+
+
+
+//    delay(1000);
+//  create_user(SPIFFS, "/1", key );
+//  Serial.print("key1  is =");
+//  Serial.println(getUserNumber(key1));
+//  
+//  delay(1000);
+//  create_user(SPIFFS, "/2", key2 );
+//  Serial.print("key 2 is =");
+//  Serial.println(getUserNumber(key2));
+//  
+//  delay(1000);
+//  create_user(SPIFFS, "/3", key3 );
+//  Serial.print("key 3 is =");
+//  Serial.println(getUserNumber(key3));
