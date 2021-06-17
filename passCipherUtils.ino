@@ -40,7 +40,7 @@ bool save_encode_credential(fs::FS &fs, const char * path, char * key, const cha
   return true;
 }
 
-bool save_user_credential(const char * website, const char * password, const char * email, const char * username ) {
+bool save_user_credential(const char * website, const char * password, const char * email, const char * username, char * key ) {
 
   char str[32];
   char buf[4];
@@ -98,7 +98,7 @@ bool read_decode_credential(fs::FS &fs, const char * path,  char * key ) {
 }
 
 
-bool read_user_credential(const char * website ) {
+bool read_user_credential(const char * website,char * key ) {
   //  char fullkey[17];
   //  strcpy(fullkey, key);
   //  strcat(fullkey, key);

@@ -45,30 +45,22 @@ void setup() {
     Serial.println("SPIFFS Mount Failed");
     return;
   }
+  bleKeyboard.begin();
+  
   read_user_number(SPIFFS);
   itoa(random(100000000, 999999999), key, 32);
-  bleKeyboard.begin();
+  randomString();
+  save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key2 );
 }
 String test;
 void loop()
 {
-  delay(1000);
-  create_user(SPIFFS, key );
-  Serial.print("key1  is =");
-  Serial.println(getUserNumber(key1));
-
-  delay(1000);
-  create_user(SPIFFS, key2 );
-  Serial.print("key 2 is =");
-  Serial.println(getUserNumber(key2));
-
-    delay(1000);
-  create_user(SPIFFS, key3 );
-  Serial.print("key 3 is =");
-  Serial.println(getUserNumber(key3));
+  readTypeCredentials("fb", key2 );
+  
+  
 
 
   Serial.print("»» LOOP ENDED. Free heap: "); Serial.println(ESP.getFreeHeap());
-  delay(1000);
+  delay(5000);
 
 }
