@@ -120,7 +120,7 @@ bool read_user_credential(const char * website ) {
 }
 
 
-bool create_user(fs::FS &fs, const char * path, char * key) {
+bool create_user(fs::FS &fs,  char * key) {
   char fullkey[17];
   strcpy(fullkey, key);
   strcat(fullkey, key);
@@ -132,9 +132,7 @@ bool create_user(fs::FS &fs, const char * path, char * key) {
   memset( cipherTextOutput, 0, sizeof( cipherTextOutput ) );
   encrypt("done", fullkey, cipherTextOutput);
 
-
-
-  File file = fs.open(path, FILE_WRITE);
+  File file = fs.open(str, FILE_WRITE);
 
   if (!file) {
     Serial.println("- failed to open file for writing");
@@ -145,6 +143,7 @@ bool create_user(fs::FS &fs, const char * path, char * key) {
   file.write((const uint8_t *)cipherTextOutput, sizeof(cipherTextOutput));
   file.close();
   Serial.println(" Done Writing ");
+  increase_user_number(SPIFFS);
 
 
   return true;
