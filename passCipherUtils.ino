@@ -1,4 +1,4 @@
-int user_number = 3;
+int user_number = 1;
 char* lcase = "abcdefghijklmnopqrstuvwxyz";
 char* ucase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 char* symbols = "!$%^@#*.:;,?-_<>=";
@@ -11,11 +11,12 @@ bool save_encode_credential(fs::FS &fs, const char * path, char * key, const cha
 
   struct storage user;
   encrypt(password, fullkey, user.password);
+
   strcpy(user.email, email);
   strcpy(user.username, username);
   user.style = 1;
 
-  
+
 
   File file = fs.open(path, FILE_WRITE);
 
@@ -27,31 +28,34 @@ bool save_encode_credential(fs::FS &fs, const char * path, char * key, const cha
 
   file.write((const uint8_t *)&user, sizeof(user));
   file.close();
+
+
+
+
   Serial.println("Saved ");
+  Serial.println("\n\n Clear text: = ");
+  Serial.print(password);
+  Serial.println("\n");
+
   return true;
 }
 
 bool save_user_credential(const char * website, const char * password, const char * email, const char * username ) {
-  char fullkey[17];
-  strcpy(fullkey, key);
-  strcat(fullkey, key);
-  strncat(fullkey, key, 4);
-  
+
   char str[32];
   char buf[4];
-  
+
   sprintf(buf, "%d", current_user_number);
   strcpy(str, "/");
   strcat(str, buf);
   strcat(str, "/");
   strcat(str, website);
-  strcat(str, ".txt");
+  strcat(str, ".txt\0");
   
-  Serial.println(fullkey);
-  
-  return save_encode_credential(SPIFFS, str, fullkey, password, email, username );
+  Serial.println(str);
+  deleteFile(SPIFFS, str);
+  return save_encode_credential(SPIFFS, str, key, password, email, username );
 }
-
 
 
 bool read_decode_credential(fs::FS &fs, const char * path,  char * key ) {
@@ -76,40 +80,43 @@ bool read_decode_credential(fs::FS &fs, const char * path,  char * key ) {
   file.read((uint8_t *)&user, sizeof(user));
   file.close();
 
+  //  Serial.println(user.email);
 
   decrypt(user.password, fullkey, decipheredTextOutput);
   strcpy(user_out.email, user.email);
 
-  Serial.println("\n\nDeciphered text:");
+
   for (int i = 0; i < 64; i++) {
     user_out.password[i] = (char)decipheredTextOutput[i];
-    //    Serial.print((char)decipheredTextOutput[i]);
+    //        Serial.print((char)decipheredTextOutput[i]);
   }
+  Serial.println("\n\nDeciphered text: = ");
   Serial.print(user_out.password);
+  Serial.println("\n");
 
   return true;
 }
 
 
 bool read_user_credential(const char * website ) {
-  char fullkey[17];
-  strcpy(fullkey, key);
-  strcat(fullkey, key);
-  strncat(fullkey, key, 4);
-  
+//  char fullkey[17];
+//  strcpy(fullkey, key);
+//  strcat(fullkey, key);
+//  strncat(fullkey, key, 4);
+
   char str[32];
   char buf[4];
-  Serial.println(fullkey);
-  
+
   sprintf(buf, "%d", current_user_number);
   strcpy(str, "/");
   strcat(str, buf);
   strcat(str, "/");
   strcat(str, website);
-  strcat(str, ".txt");
+  strcat(str, ".txt\0");
   Serial.println(str);
-  return read_decode_credential(SPIFFS, str, fullkey );
-     
+  
+  return read_decode_credential(SPIFFS, str, key );
+
 }
 
 
@@ -118,16 +125,11 @@ bool create_user(fs::FS &fs, const char * path, char * key) {
   strcpy(fullkey, key);
   strcat(fullkey, key);
   strncat(fullkey, key, 4);
-  Serial.print("fullkey = ");
-  Serial.println(fullkey);
 
   memset( cipherTextOutput, 0, sizeof( cipherTextOutput ) );
   encrypt("done", fullkey, cipherTextOutput);
 
 
-  //  for (int i = 0; i < 64; i++) {
-  //    Serial.print((char)decipheredTextOutput[i]);
-  //  }
 
   File file = fs.open(path, FILE_WRITE);
 
@@ -153,7 +155,7 @@ bool read_create_user(fs::FS &fs, const char * path, char * key) {
 
   memset( cipherTextOutput, 0, sizeof( cipherTextOutput ) );
   memset( decipheredTextOutput, 0, sizeof( decipheredTextOutput ) );
-  encrypt("done", fullkey, cipherTextOutput);
+//  encrypt("done", fullkey, cipherTextOutput);
 
   //read from memory
   File file = fs.open(path, FILE_READ);
