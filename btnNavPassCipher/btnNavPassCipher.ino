@@ -1,8 +1,7 @@
-/* Arduino menu library example
-Oct. 2016 Rui Azevedo (ruihfazevedo@gmail.com) www.r-site.net
-
-Digital keypad (3 buttons) using the menu keyIn driver
-*/
+#define I2C_ADDRESS 0x3C
+// #include <Wire.h>
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiWire.h"
 
 #include <Arduino.h>
 #include <menu.h>
@@ -10,6 +9,9 @@ Digital keypad (3 buttons) using the menu keyIn driver
 #include <menuIO/serialOut.h>
 #include <menuIO/altKeyIn.h>
 #include <menuIO/chainStream.h>
+#include <menuIO/SSD1306AsciiOut.h>
+#include <menuIO/serialIO.h>
+
 
 using namespace Menu;
 
@@ -19,6 +21,12 @@ using namespace Menu;
 #define BTN_SEL 6  // Select button
 #define BTN_UP 7   // Up
 #define BTN_DOWN 8 // Down
+
+#define menuFont X11fixed7x14
+#define fontW 7
+#define fontH 15
+
+SSD1306AsciiWire oled;
 
 //////////////////////////////////////////////////////////
 
@@ -30,6 +38,7 @@ const char *const alphaNum[] MEMMODE = {" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZab
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
 char pin[] = "                              "; //field will initialize its size by this string length
+int state = 0;
 
 ///////////////////////////////////////////////////////////////////
 
@@ -41,6 +50,40 @@ result showEvent(eventMask e)
   Serial.print("event: ");
   Serial.println(e);
   return proceed;
+}
+
+result pinEvent(eventMask e)
+{
+  Serial.println("");
+  Serial.print("pin event: ");
+  Serial.println(e);
+  state = 1; //PIn mode
+
+  if (String(pin) == "                              ") {
+    Serial.println("Enter Something");
+  } else {
+    state = 1;
+  }
+  Serial.println(state);
+  Serial.println(pin);
+  return proceed;
+}
+
+result authEvent(eventMask e)
+{
+
+  state = 1;
+
+  if (String(pin) == "                              ") {
+    Serial.println("Enter Something");
+    return quit;
+  } else {
+    state = 1;
+    Serial.println(state);
+    Serial.println(pin);
+    return proceed;
+  }
+
 }
 
 int test = 1;
@@ -60,73 +103,56 @@ result action2(eventMask e)
   Serial.print("action2 event:");
   Serial.println(e);
   Serial.flush();
+
   return quit;
 }
-
-// int ledCtrl = LOW;
-
-// result myLedOn()
-// {
-//   ledCtrl = HIGH;
-//   return proceed;
-// }
-// result myLedOff()
-// {
-//   ledCtrl = LOW;
-//   return proceed;
-// }
-
-// TOGGLE(ledCtrl, setLed, "Led: ", doNothing, noEvent, wrapStyle,
-//        VALUE("On", HIGH, doNothing, noEvent),
-//        VALUE("Off", LOW, doNothing, noEvent));
-
-// int selTest = 0;
-// SELECT(selTest, selMenu, "Select", doNothing, noEvent, wrapStyle,
-//        VALUE("Zero", 0, doNothing, noEvent),
-//        VALUE("One", 1, doNothing, noEvent),
-//        VALUE("Two", 2, doNothing, noEvent));
 String list[100] = {"tee", "kay", "gsg", "jjf", "tee2", "3kay", "5gsg", "j7jf", "tje7e", "6kay", "5gsg", "vjjf"};
 int chooseTest = -1;
-CHOOSE(chooseTest, chooseMenu, "Choose", doNothing, noEvent, wrapStyle,
-       VALUE("First", 1, doNothing, noEvent),
-       VALUE("Second", 2, doNothing, noEvent),
-       VALUE("Third", 3, doNothing, noEvent),
-       VALUE("Last", -1, doNothing, noEvent));
 
-MENU(subMenu, "Continue", doNothing, anyEvent, wrapStyle,
+
+MENU(subMenu, "Continue //hid", authEvent, enterEvent, wrapStyle,
      OP("Show Credentials", showEvent, enterEvent),
      OP("Enter New", showEvent, enterEvent),
-     OP("action1", action1, enterEvent),
-     OP("action2", action2, enterEvent),
      EXIT("<Back"));
 
 MENU(subEnterPinMenu, "Enter Pin", showEvent, noEvent, wrapStyle,
-     OP("test 2", showEvent, noEvent),
-     EDIT("Pin", pin, alphaNum, showEvent, returnEvent, noStyle),
-     OP("test 3", showEvent, noEvent),
+     EDIT("Pin", pin, alphaNum, pinEvent, returnEvent, noStyle),
+     OP("Authorize User", pinEvent, enterEvent),
      SUBMENU(subMenu),
      EXIT("<Exit"));
 
 MENU(mainMenu, "Main menu", doNothing, noEvent, wrapStyle,
 
      SUBMENU(subEnterPinMenu),
-     FIELD(test, "Test", "%", 0, 10, 2, 1, doNothing, noEvent, wrapStyle),
-     OP("test 3", showEvent, noEvent),
      OP("Create New User", action2, enterEvent),
      EXIT("<Back"));
 
 keyMap joystickBtn_map[] = {
-    {-BTN_SEL, defaultNavCodes[enterCmd].ch, INPUT_PULLUP},
-    {-BTN_UP, defaultNavCodes[upCmd].ch, INPUT_PULLUP},
-    {-BTN_DOWN, defaultNavCodes[downCmd].ch, INPUT_PULLUP},
+  { -BTN_SEL, defaultNavCodes[enterCmd].ch, INPUT_PULLUP},
+  { -BTN_UP, defaultNavCodes[upCmd].ch, INPUT_PULLUP},
+  { -BTN_DOWN, defaultNavCodes[downCmd].ch, INPUT_PULLUP},
 };
 keyIn<3> joystickBtns(joystickBtn_map);
+
+
+//define output device
+idx_t serialTops[MAX_DEPTH] = {0};
+serialOut outSerial(Serial, serialTops);
+
+//describing a menu output device without macros
+//define at least one panel for menu output
+const panel panels[] MEMMODE = {{0, 0, 128 / fontW, 64 / fontH}};
+navNode* nodes[sizeof(panels) / sizeof(panel)]; //navNodes to store navigation status
+panelsList pList(panels, nodes, 1); //a list of panels and nodes
+idx_t tops[MAX_DEPTH] = {0, 0}; //store cursor positions for each level
+SSD1306AsciiOut outOLED(&oled, tops, pList, 8, 1+((fontH - 1) >> 3) ); //oled output device menu driver
+menuOut* constMEM outputs[] MEMMODE = {&outOLED, &outSerial}; //list of output devices
+outputsList out(outputs, sizeof(outputs) / sizeof(menuOut*)); //outputs list
 
 serialIn serial(Serial);
 menuIn *inputsList[] = {&joystickBtns, &serial};
 chainStream<2> in(inputsList); //3 is the number of inputs
 
-MENU_OUTPUTS(out, MAX_DEPTH, SERIAL_OUT(Serial), NONE);
 
 NAVROOT(nav, mainMenu, MAX_DEPTH, in, out);
 
@@ -135,6 +161,14 @@ void setup()
   Serial.begin(115200);
   while (!Serial)
     ;
+
+  Serial.println("menu 4.x test"); Serial.flush();
+  Wire.begin(4, 5);
+  oled.begin(&Adafruit128x64, I2C_ADDRESS);
+  oled.setFont(menuFont);
+
+  oled.clear();
+  oled.setCursor(0, 0);
   pinMode(LEDPIN, OUTPUT);
   joystickBtns.begin();
 }
