@@ -52,18 +52,13 @@ result showEvent(eventMask e)
   return proceed;
 }
 
-result pinEvent(eventMask e)
+result showListEvent(eventMask e)
 {
   Serial.println("");
   Serial.print("pin event: ");
   Serial.println(e);
-  state = 1; //PIn mode
+  state = 2; //PIn mode
 
-  if (String(pin) == "                              ") {
-    Serial.println("Enter Something");
-  } else {
-    state = 1;
-  }
   Serial.println(state);
   Serial.println(pin);
   return proceed;
@@ -72,7 +67,7 @@ result pinEvent(eventMask e)
 result authEvent(eventMask e)
 {
 
-  state = 1;
+  state = 0;
 
   if (String(pin) == "                              ") {
     Serial.println("Enter Something");
@@ -106,18 +101,45 @@ result action2(eventMask e)
 
   return quit;
 }
-String list[100] = {"tee", "kay", "gsg", "jjf", "tee2", "3kay", "5gsg", "j7jf", "tje7e", "6kay", "5gsg", "vjjf"};
+
+result showUsernameEvent(eventMask e)
+{
+  Serial.println("Teezzan");
+  state = 4;
+  return proceed;
+}
+result showEmailEvent(eventMask e)
+{
+  Serial.println("Email@gmail.com");
+  state = 5;
+  return proceed;
+}
+result showPasswordEvent(eventMask e)
+{
+  Serial.println("pasjneini");
+  state = 6;
+  return proceed;
+}
+String list[30] = {"tee", "kay", "gsg", "jjf", "trrtee2", "3rrwkay", "5gzzaadsg", "j7jf", "tje7e", "6kdrtdsway", "w5gsg", "vjjf"};
 int chooseTest = -1;
 
 
-MENU(subMenu, "Continue //hid", authEvent, enterEvent, wrapStyle,
-     OP("Show Credentials", showEvent, enterEvent),
+MENU(subPassword, "Details", showListEvent, enterEvent, wrapStyle,
+     OP("Username", showUsernameEvent, enterEvent),
+     OP("Email", showEmailEvent, enterEvent),
+     OP("Password", showPasswordEvent, enterEvent),
+     OP("Display", doNothing, enterEvent),
+     EXIT("<Back"));
+
+
+MENU(subMenu, "Continue", authEvent, enterEvent, wrapStyle,
+     SUBMENU(subPassword),
      OP("Enter New", showEvent, enterEvent),
      EXIT("<Back"));
 
+//OP("Show Credentials", showListEvent, enterEvent),
 MENU(subEnterPinMenu, "Enter Pin", showEvent, noEvent, wrapStyle,
-     EDIT("Pin", pin, alphaNum, pinEvent, returnEvent, noStyle),
-     OP("Authorize User", pinEvent, enterEvent),
+     EDIT("Pin", pin, alphaNum, noEvent, returnEvent, noStyle),
      SUBMENU(subMenu),
      EXIT("<Exit"));
 
@@ -156,6 +178,42 @@ chainStream<2> in(inputsList); //3 is the number of inputs
 
 NAVROOT(nav, mainMenu, MAX_DEPTH, in, out);
 
+void listCred() {
+  bool escape = false;
+  String inp = "";
+  int index = 0;
+  oled.clear();
+  while (!escape) {
+    inp = Serial.readString();
+    if (inp != "") {
+
+      if (inp == "+\n") {
+        if (index != 11)
+          index++;
+      } else if (inp == "-\n") {
+        if (index != 0)
+          index--;
+      }
+      else if (inp == "/\n") {
+        escape = true;
+      }
+      Serial.print(index);
+      Serial.print(inp);
+      Serial.println("end");
+      oled.clear();
+      oled.setCursor(0, 0);
+      oled.println("Crendential List");
+      oled.print(">");
+      oled.println(list[index]);
+      oled.println(list[index + 1]);
+      oled.println(list[index + 2]);
+    }
+  }
+
+  nav.poll();
+  state = 0;
+
+}
 void setup()
 {
   Serial.begin(115200);
@@ -177,5 +235,20 @@ void setup()
 
 void loop()
 {
-  nav.poll(); //also do serial input
+  if (state != 2) {
+    nav.poll(); //also do serial input
+  }
+  else {
+    listCred();
+    nav.doNav(downCmd);
+    nav.doNav(downCmd);
+    nav.doNav(downCmd);
+    nav.doNav(upCmd);
+    nav.doNav(upCmd);
+    nav.doNav(upCmd);
+    
+  }
+
+
+  nav.poll();
 }
