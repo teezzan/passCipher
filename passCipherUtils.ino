@@ -98,7 +98,7 @@ bool read_decode_credential(fs::FS &fs, const char * path,  char * key ) {
 }
 
 
-bool read_user_credential(const char * website,char * key ) {
+bool read_user_credential(const char * website, char * key ) {
   //  char fullkey[17];
   //  strcpy(fullkey, key);
   //  strcat(fullkey, key);
@@ -166,7 +166,7 @@ bool read_user_number(fs::FS &fs) {
   Serial.print("user_number = ");
   Serial.println(num);
   user_number = atoi (num);
-  
+
   file.close();
   return true;
 
@@ -279,4 +279,42 @@ int getUserNumber(char * key) {
     }
   }
   return user;
+}
+
+void listStoredCredentials(fs::FS &fs, const char * dirname, uint8_t levels, int usernum) {
+  String temp = "";
+  char str[5] = "/";
+  int index = 0;
+  sprintf(&str[1], "%d", usernum);
+  strcat(&str[2], "/");
+
+  File root = fs.open(dirname);
+  if (!root) {
+    Serial.println("- failed to open directory");
+    return;
+  }
+  if (!root.isDirectory()) {
+    Serial.println(" - not a directory");
+    return;
+  }
+
+  File file = root.openNextFile();
+  while (file) {
+    if (file.isDirectory()) {
+      if (levels) {
+        listDir(fs, file.name(), levels - 1);
+      }
+    } else {
+      temp = String(file.name());
+
+      if (temp.indexOf(str) != -1) {
+        list[index] = temp.substring(3, temp.length() - 4);
+        Serial.print("list index = ");
+        Serial.println(list[index]);
+      }
+
+
+    }
+    file = root.openNextFile();
+  }
 }

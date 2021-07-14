@@ -33,11 +33,12 @@ struct cred user_out;
 
 
 
-char key[33];
+char key[33] = "oio9qn";
 char key1[33] = "s079q7";
 char key2[33] = "p19c72";
 char key3[33] = "it8vu6";
 int current_user_number = 0;
+String list[100] = {};
 
 
 
@@ -87,10 +88,9 @@ const char *const alphaNum[] MEMMODE = {" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZab
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "                              "; //field will initialize its size by this string length
+char pin[] = "oio9qn"; //field will initialize its size by this string length
 int state = 0;
 
-String list[30] = {"tee", "kay", "gsg", "jjf", "trrtee2", "3rrwkay", "5gzzaadsg", "j7jf", "tje7e", "6kdrtdsway", "w5gsg", "vjjf"};
 int chooseTest = -1;
 ///////////////////////////////////////////////////////////////////
 result doAlert(eventMask e, prompt &item);
@@ -122,8 +122,8 @@ result showListEvent(eventMask e)
   int escape = 0;
   String inp = "";
   int index = 0;
-//  oled.clear();
-  while (escape ==0) {
+  //  oled.clear();
+  while (escape == 0) {
     inp = Serial.readString();
     if (inp != "") {
 
@@ -152,13 +152,13 @@ result showListEvent(eventMask e)
   }
 
   state = 0;
-  if(escape ==-1){
+  if (escape == -1) {
     return quit;
   }
-  else if(escape == 1){
+  else if (escape == 1) {
     return proceed;
   }
-  
+
 
 }
 
@@ -174,7 +174,24 @@ result authEvent(eventMask e)
     state = 1;
     Serial.println(state);
     Serial.println(pin);
-    return proceed;
+    oled.clear();
+    oled.setCursor(0, 0);
+
+    current_user_number = getUserNumber(pin);
+    if (current_user_number == -1) {
+      oled.println("User not Found!");
+      delay(2000);
+      oled.clear();
+      return quit;
+    } else {
+      oled.print("auth as user ");
+      oled.println(current_user_number);
+      listStoredCredentials(SPIFFS, "/", 0, current_user_number);
+      delay(2000);
+      oled.clear();
+      return proceed;
+    }
+
   }
 
 }
@@ -190,27 +207,40 @@ result action1(eventMask e, navNode &nav, prompt &item)
   return proceed;
 }
 
-result action2(eventMask e)
+result createUserEvent(eventMask e)
 {
   Serial.println("");
-  Serial.print("action2 event:");
+  Serial.print("createUserEvent event:");
   Serial.println(e);
   Serial.flush();
   state = -1;
   String inp = "";
+  char cstr0[33];
+  oled.clear();
+  oled.setCursor(0, 0);
+  oled.println("Creating User...");
+
+
+  itoa(random(100000000, 999999999), cstr0, 32);
+  create_user(SPIFFS, cstr0 );
+
+  Serial.println(cstr0);
+  oled.print("Pass: ");
+  oled.println(cstr0);
+
+  oled.print("unum: ");
+  oled.println(user_number);
   while (state == -1) {
-    
+
     inp = Serial.readString();
     if (inp != "") {
-      oled.clear();
-      oled.setCursor(0, 0);
-      oled.println("Creating User");
+
       if (inp == "/\n") {
         state = 0;
       }
     }
   }
-  
+
   return proceed;
 }
 
@@ -262,7 +292,7 @@ MENU(subEnterPinMenu, "Enter Pin", showEvent, noEvent, wrapStyle,
 MENU(mainMenu, "Main menu", doNothing, noEvent, wrapStyle,
 
      SUBMENU(subEnterPinMenu),
-     OP("Create New User", action2, enterEvent),
+     OP("Create New User", createUserEvent, enterEvent),
      EXIT("<Back"));
 
 keyMap joystickBtn_map[] = {
@@ -331,18 +361,16 @@ void setup() {
 
   bleKeyboard.begin();
   read_user_number(SPIFFS);
-  //  /itoa(random(100000000, 999999999), key, 32);
-  //  /randomString();
-  //  /save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key2 );
+  //    itoa(random(100000000, 999999999), key, 32);
+  //    randomString();
+  //    save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key );
+  listStoredCredentials(SPIFFS, "/", 0, 0);
 }
 
 void loop()
 {
   //  readTypeCredentials("fb", key2 );/
 
-
-
-
-  nav.poll();
+    nav.poll();
 
 }

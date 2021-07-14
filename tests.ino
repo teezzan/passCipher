@@ -17,9 +17,9 @@ void testReadWrite(const char * website, char * key) {
 
   delay(300);
   read_user_credential(website, key );
-  delay(1000);
+  delay(10000);
 
-  deleteFile(SPIFFS, str);
+//  deleteFile(SPIFFS, str);
 
 }
 
