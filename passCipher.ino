@@ -10,6 +10,7 @@
 BleKeyboard bleKeyboard;
 
 
+
 int user_number = 0;
 uint8_t iv[16] = {0x1f, 0xa8, 0x57, 0xe3, 0x4f, 0x78, 0xbe, 0x68, 0x8c, 0xb2, 0x44, 0x01, 0x27, 0x9b, 0xee, 0xf5};
 unsigned char cipherTextOutput[64];
@@ -38,6 +39,277 @@ char key2[33] = "p19c72";
 char key3[33] = "it8vu6";
 int current_user_number = 0;
 
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////
+
+#define I2C_ADDRESS 0x3C
+// #include <Wire.h>
+#include "SSD1306Ascii.h"
+#include "SSD1306AsciiWire.h"
+
+#include <Arduino.h>
+#include <menu.h>
+#include <menuIO/serialIn.h>
+#include <menuIO/serialOut.h>
+#include <menuIO/altKeyIn.h>
+#include <menuIO/chainStream.h>
+#include <menuIO/SSD1306AsciiOut.h>
+#include <menuIO/serialIO.h>
+
+
+using namespace Menu;
+
+#define LEDPIN 13
+#define MAX_DEPTH 4
+
+#define BTN_SEL 6  // Select button
+#define BTN_UP 7   // Up
+#define BTN_DOWN 8 // Down
+
+#define menuFont X11fixed7x14
+#define fontW 7
+#define fontH 15
+
+SSD1306AsciiWire oled;
+#define SOFT_DEBOUNCE_MS 100
+
+//////////////////////////////////////////////////////////
+
+//list of allowed characters
+const char *const digit = "0123456789";
+const char *const hexChars MEMMODE = "0123456789ABCDEF";
+const char *const alphaNum[] MEMMODE = {" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,+-_"};
+//individual character validators
+const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
+
+char pin[] = "                              "; //field will initialize its size by this string length
+int state = 0;
+
+String list[30] = {"tee", "kay", "gsg", "jjf", "trrtee2", "3rrwkay", "5gzzaadsg", "j7jf", "tje7e", "6kdrtdsway", "w5gsg", "vjjf"};
+int chooseTest = -1;
+///////////////////////////////////////////////////////////////////
+result doAlert(eventMask e, prompt &item);
+
+class altPrompt: public prompt {
+  public:
+    altPrompt(constMEM promptShadow& p): prompt(p) {}
+    Used printTo(navRoot &root, bool sel, menuOut& out, idx_t idx, idx_t len, idx_t) override {
+      return out.printRaw(F("special prompt!"), len);;
+    }
+};
+
+
+result showEvent(eventMask e)
+{
+  Serial.println("");
+  Serial.print("event: ");
+  Serial.println(e);
+  return proceed;
+}
+
+result showListEvent(eventMask e)
+{
+  Serial.println("");
+  Serial.print("pin event: ");
+  Serial.println(e);
+  state = 2; //PIn mode
+
+  int escape = 0;
+  String inp = "";
+  int index = 0;
+//  oled.clear();
+  while (escape ==0) {
+    inp = Serial.readString();
+    if (inp != "") {
+
+      if (inp == "+\n") {
+        if (index != 11)
+          index++;
+      } else if (inp == "-\n") {
+        if (index != 0)
+          index--;
+      }
+      else if (inp == "/\n") {
+        escape = -1;
+      }
+      else if (inp == "*\n") {
+        escape = 1;
+      }
+      Serial.print(inp);
+      oled.clear();
+      oled.setCursor(0, 0);
+      oled.println("Crendential List");
+      oled.print(">");
+      oled.println(list[index]);
+      oled.println(list[index + 1]);
+      oled.println(list[index + 2]);
+    }
+  }
+
+  state = 0;
+  if(escape ==-1){
+    return quit;
+  }
+  else if(escape == 1){
+    return proceed;
+  }
+  
+
+}
+
+result authEvent(eventMask e)
+{
+
+  state = 0;
+
+  if (String(pin) == "                              ") {
+    Serial.println("Enter Something");
+    return quit;
+  } else {
+    state = 1;
+    Serial.println(state);
+    Serial.println(pin);
+    return proceed;
+  }
+
+}
+
+int test = 1;
+
+result action1(eventMask e, navNode &nav, prompt &item)
+{
+  Serial.println("");
+  Serial.print("action1 event:");
+  Serial.println(e);
+  Serial.flush();
+  return proceed;
+}
+
+result action2(eventMask e)
+{
+  Serial.println("");
+  Serial.print("action2 event:");
+  Serial.println(e);
+  Serial.flush();
+  state = -1;
+  String inp = "";
+  while (state == -1) {
+    
+    inp = Serial.readString();
+    if (inp != "") {
+      oled.clear();
+      oled.setCursor(0, 0);
+      oled.println("Creating User");
+      if (inp == "/\n") {
+        state = 0;
+      }
+    }
+  }
+  
+  return proceed;
+}
+
+result showUsernameEvent(eventMask e)
+{
+  Serial.println("Teezzan");
+  state = 4;
+  return proceed;
+}
+result showEmailEvent(eventMask e)
+{
+  Serial.println("Email@gmail.com");
+  state = 5;
+  return proceed;
+}
+result showPasswordEvent(eventMask e)
+{
+  Serial.println("pasjneini");
+  state = 6;
+  return proceed;
+}
+
+
+
+///////////////////////////////////////////////////////////////////
+
+
+
+
+MENU(subPassword, "Details", showListEvent, enterEvent, wrapStyle,
+     OP("Username", showUsernameEvent, enterEvent),
+     OP("Email", showEmailEvent, enterEvent),
+     OP("Password", showPasswordEvent, enterEvent),
+     OP("Display", doNothing, enterEvent),
+     EXIT("<Back"));
+
+
+MENU(subMenu, "Continue", authEvent, enterEvent, wrapStyle,
+     SUBMENU(subPassword),
+     OP("Enter New", showEvent, enterEvent),
+     EXIT("<Back"));
+
+//OP("Show Credentials", showListEvent, enterEvent),
+MENU(subEnterPinMenu, "Enter Pin", showEvent, noEvent, wrapStyle,
+     EDIT("Pin", pin, alphaNum, noEvent, returnEvent, noStyle),
+     SUBMENU(subMenu),
+     EXIT("<Exit"));
+
+MENU(mainMenu, "Main menu", doNothing, noEvent, wrapStyle,
+
+     SUBMENU(subEnterPinMenu),
+     OP("Create New User", action2, enterEvent),
+     EXIT("<Back"));
+
+keyMap joystickBtn_map[] = {
+  { -BTN_SEL, defaultNavCodes[enterCmd].ch, INPUT_PULLUP},
+  { -BTN_UP, defaultNavCodes[upCmd].ch, INPUT_PULLUP},
+  { -BTN_DOWN, defaultNavCodes[downCmd].ch, INPUT_PULLUP},
+};
+keyIn<3> joystickBtns(joystickBtn_map);
+
+
+//define output device
+idx_t serialTops[MAX_DEPTH] = {0};
+serialOut outSerial(Serial, serialTops);
+
+//describing a menu output device without macros
+//define at least one panel for menu output
+const panel panels[] MEMMODE = {{0, 0, 128 / fontW, 64 / fontH}};
+navNode* nodes[sizeof(panels) / sizeof(panel)]; //navNodes to store navigation status
+panelsList pList(panels, nodes, 1); //a list of panels and nodes
+idx_t tops[MAX_DEPTH] = {0, 0}; //store cursor positions for each level
+SSD1306AsciiOut outOLED(&oled, tops, pList, 8, 1+((fontH - 1) >> 3) ); //oled output device menu driver
+menuOut* constMEM outputs[] MEMMODE = {&outOLED, &outSerial}; //list of output devices
+outputsList out(outputs, sizeof(outputs) / sizeof(menuOut*)); //outputs list
+
+serialIn serial(Serial);
+menuIn *inputsList[] = {&joystickBtns, &serial};
+chainStream<2> in(inputsList); //3 is the number of inputs
+
+
+NAVROOT(nav, mainMenu, MAX_DEPTH, in, out);
+
+
+
+///////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+
 void setup() {
 
   Serial.begin(115200);
@@ -45,22 +317,32 @@ void setup() {
     Serial.println("SPIFFS Mount Failed");
     return;
   }
+
+
+  Serial.println("menu 4.x test"); Serial.flush();
+  Wire.begin(4, 5);
+  oled.begin(&Adafruit128x64, I2C_ADDRESS);
+  oled.setFont(menuFont);
+
+  oled.clear();
+  oled.setCursor(0, 0);
+  joystickBtns.begin();
+
+
   bleKeyboard.begin();
-  
   read_user_number(SPIFFS);
-  itoa(random(100000000, 999999999), key, 32);
-  randomString();
-  save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key2 );
+  //  /itoa(random(100000000, 999999999), key, 32);
+  //  /randomString();
+  //  /save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key2 );
 }
-String test;
+
 void loop()
 {
-  readTypeCredentials("fb", key2 );
-  
-  
+  //  readTypeCredentials("fb", key2 );/
 
 
-  Serial.print("»» LOOP ENDED. Free heap: "); Serial.println(ESP.getFreeHeap());
-  delay(5000);
+
+
+  nav.poll();
 
 }
