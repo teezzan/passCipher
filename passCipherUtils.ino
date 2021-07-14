@@ -311,6 +311,7 @@ void listStoredCredentials(fs::FS &fs, const char * dirname, uint8_t levels, int
         list[index] = temp.substring(3, temp.length() - 4);
         Serial.print("list index = ");
         Serial.println(list[index]);
+        index = index + 1;
       }
 
 

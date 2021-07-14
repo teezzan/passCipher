@@ -33,7 +33,7 @@ struct cred user_out;
 
 
 
-char key[33] = "oio9qn";
+char key[33] = "39vnbr";
 char key1[33] = "s079q7";
 char key2[33] = "p19c72";
 char key3[33] = "it8vu6";
@@ -88,7 +88,7 @@ const char *const alphaNum[] MEMMODE = {" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZab
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "oio9qn"; //field will initialize its size by this string length
+char pin[] = "39vnbr"; //field will initialize its size by this string length
 int state = 0;
 
 int chooseTest = -1;
@@ -128,7 +128,7 @@ result showListEvent(eventMask e)
     if (inp != "") {
 
       if (inp == "+\n") {
-        if (index != 11)
+        if (index != 11)//TBD
           index++;
       } else if (inp == "-\n") {
         if (index != 0)
@@ -156,6 +156,8 @@ result showListEvent(eventMask e)
     return quit;
   }
   else if (escape == 1) {
+
+    read_user_credential(list[index].c_str(), pin);
     return proceed;
   }
 
@@ -247,18 +249,30 @@ result createUserEvent(eventMask e)
 result showUsernameEvent(eventMask e)
 {
   Serial.println("Teezzan");
+  if (bleKeyboard.isConnected()) {
+    bleKeyboard.println("user_out.username");
+//    
+  }
   state = 4;
   return proceed;
 }
 result showEmailEvent(eventMask e)
 {
-  Serial.println("Email@gmail.com");
+  Serial.println(user_out.email);
+  if (bleKeyboard.isConnected()) {
+    bleKeyboard.print(user_out.email);
+    bleKeyboard.write(KEY_TAB);
+    delay(500);
+  }
   state = 5;
   return proceed;
 }
 result showPasswordEvent(eventMask e)
 {
-  Serial.println("pasjneini");
+  Serial.println(user_out.password);
+  if (bleKeyboard.isConnected()) {
+    bleKeyboard.print(String(user_out.password));
+  }
   state = 6;
   return proceed;
 }
@@ -364,13 +378,14 @@ void setup() {
   //    itoa(random(100000000, 999999999), key, 32);
   //    randomString();
   //    save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key );
-  listStoredCredentials(SPIFFS, "/", 0, 0);
+  //  listStoredCredentials(SPIFFS, "/", 0, 0);
+//  testReadWrite(String(random(1000, 9999)).c_str(), pin);
 }
 
 void loop()
 {
-  //  readTypeCredentials("fb", key2 );/
-
+  //  readTypeCredentials("3928", pin );
+  //  delay(2000);
     nav.poll();
 
 }
