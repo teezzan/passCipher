@@ -91,8 +91,9 @@ const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexCha
 
 char pin[] = "30dtoj"; //field will initialize its size by this string length
 char password[] = "                               ";
-char email[] = "                                  ";
-char username[] = "                                 ";
+char email[] = "t@gmail.com";
+char username[] = "tedfeggg";
+char website[] = "twitter";
 int state = 0;
 
 int chooseTest = -1;
@@ -220,6 +221,29 @@ result displayEvent(eventMask e)
 
 }
 
+result genPasswordEvent(eventMask e)
+{
+  randomString();
+  strcpy(password, password_buf);
+
+  return proceed;
+
+
+}
+result savePasswordEvent(eventMask e)
+{
+  //do some validation
+  Serial.println(website);
+  Serial.println(password);
+  Serial.println(email);
+  Serial.println(username);
+  save_user_credential(website, password, email, username , pin);
+
+  return proceed;
+
+
+}
+
 int test = 1;
 
 result action1(eventMask e, navNode &nav, prompt &item)
@@ -282,8 +306,8 @@ result showEmailEvent(eventMask e)
 {
   Serial.println(user_out.email);
   if (bleKeyboard.isConnected()) {
-    bleKeyboard.print(user_out.email);
-    bleKeyboard.write(KEY_TAB);
+    String temp = String(user_out.email) + '\0';
+    bleKeyboard.print(temp);
     delay(500);
   }
   state = 5;
@@ -293,7 +317,8 @@ result showPasswordEvent(eventMask e)
 {
   Serial.println(user_out.password);
   if (bleKeyboard.isConnected()) {
-    bleKeyboard.print(String(user_out.password));
+    String temp = String(user_out.password) + '\0';
+    bleKeyboard.print(temp);
   }
   state = 6;
   return proceed;
@@ -305,11 +330,12 @@ result showPasswordEvent(eventMask e)
 
 
 MENU(newDetailsMenu, "Add New", doNothing, enterEvent, wrapStyle,
+     EDIT("Website", website, alphaNum, noEvent, returnEvent, noStyle),
      EDIT("Email", email, alphaunNum, noEvent, returnEvent, noStyle),
      EDIT("Username", username, alphaNum, noEvent, returnEvent, noStyle),
      EDIT("Password", password, alphaNum, noEvent, returnEvent, noStyle),
-     OP("Gen. Password", noEvent, enterEvent),
-     OP("Save", noEvent, enterEvent),
+     OP("Gen. Password", genPasswordEvent, enterEvent),
+     OP("Save", savePasswordEvent, enterEvent),
      EXIT("<Back"));
 
 MENU(subPassword, "Details", showListEvent, enterEvent, wrapStyle,
@@ -325,7 +351,6 @@ MENU(subMenu, "Continue", authEvent, enterEvent, wrapStyle,
      SUBMENU(newDetailsMenu),
      EXIT("<Back"));
 
-//OP("Show Credentials", showListEvent, enterEvent),
 MENU(subEnterPinMenu, "Enter Pin", showEvent, noEvent, wrapStyle,
      EDIT("Pin", pin, alphaNum, noEvent, returnEvent, noStyle),
      SUBMENU(subMenu),
