@@ -33,7 +33,7 @@ struct cred user_out;
 
 
 
-char key[33] = "39vnbr";
+char key[33] = "30dtoj";
 char key1[33] = "s079q7";
 char key2[33] = "p19c72";
 char key3[33] = "it8vu6";
@@ -85,10 +85,14 @@ SSD1306AsciiWire oled;
 const char *const digit = "0123456789";
 const char *const hexChars MEMMODE = "0123456789ABCDEF";
 const char *const alphaNum[] MEMMODE = {" 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz.,+-_"};
+const char *const alphaunNum[] MEMMODE = {" 0123456789abcdefghijklmnopqrstuvwxyz.,+-_@"};
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "39vnbr"; //field will initialize its size by this string length
+char pin[] = "30dtoj"; //field will initialize its size by this string length
+char password[] = "                               ";
+char email[] = "                                  ";
+char username[] = "                                 ";
 int state = 0;
 
 int chooseTest = -1;
@@ -198,6 +202,24 @@ result authEvent(eventMask e)
 
 }
 
+result displayEvent(eventMask e)
+{
+  String inp = "";
+  oled.clear();
+  oled.setCursor(0, 0);
+  oled.println(user_out.email);
+  oled.println(user_out.password);
+
+  while (inp == "") {
+
+    inp = Serial.readString();
+  }
+
+  return proceed;
+
+
+}
+
 int test = 1;
 
 result action1(eventMask e, navNode &nav, prompt &item)
@@ -250,8 +272,8 @@ result showUsernameEvent(eventMask e)
 {
   Serial.println("Teezzan");
   if (bleKeyboard.isConnected()) {
-    bleKeyboard.println("user_out.username");
-//    
+    bleKeyboard.print("Hello world. oh");
+    //
   }
   state = 4;
   return proceed;
@@ -282,19 +304,25 @@ result showPasswordEvent(eventMask e)
 ///////////////////////////////////////////////////////////////////
 
 
-
+MENU(newDetailsMenu, "Add New", doNothing, enterEvent, wrapStyle,
+     EDIT("Email", email, alphaunNum, noEvent, returnEvent, noStyle),
+     EDIT("Username", username, alphaNum, noEvent, returnEvent, noStyle),
+     EDIT("Password", password, alphaNum, noEvent, returnEvent, noStyle),
+     OP("Gen. Password", noEvent, enterEvent),
+     OP("Save", noEvent, enterEvent),
+     EXIT("<Back"));
 
 MENU(subPassword, "Details", showListEvent, enterEvent, wrapStyle,
      OP("Username", showUsernameEvent, enterEvent),
      OP("Email", showEmailEvent, enterEvent),
      OP("Password", showPasswordEvent, enterEvent),
-     OP("Display", doNothing, enterEvent),
+     OP("Display", displayEvent, enterEvent),
      EXIT("<Back"));
 
 
 MENU(subMenu, "Continue", authEvent, enterEvent, wrapStyle,
      SUBMENU(subPassword),
-     OP("Enter New", showEvent, enterEvent),
+     SUBMENU(newDetailsMenu),
      EXIT("<Back"));
 
 //OP("Show Credentials", showListEvent, enterEvent),
@@ -379,13 +407,13 @@ void setup() {
   //    randomString();
   //    save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key );
   //  listStoredCredentials(SPIFFS, "/", 0, 0);
-//  testReadWrite(String(random(1000, 9999)).c_str(), pin);
+  //  testReadWrite(String(random(1000, 9999)).c_str(), pin);
 }
 
 void loop()
 {
   //  readTypeCredentials("3928", pin );
   //  delay(2000);
-    nav.poll();
+  nav.poll();
 
 }
