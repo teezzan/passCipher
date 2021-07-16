@@ -1,5 +1,0 @@
-{
-    "sketch": "btnNavPassCipher.ino",
-    "board": "esp32:esp32:esp32wrover",
-    "port": "/dev/ttyS1"
-}

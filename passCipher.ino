@@ -33,7 +33,7 @@ struct cred user_out;
 
 
 
-char key[33] = "30dtoj";
+char key[33] = "9696jr";
 char key1[33] = "s079q7";
 char key2[33] = "p19c72";
 char key3[33] = "it8vu6";
@@ -90,7 +90,7 @@ const char *const alphaunNum[] MEMMODE = {" 0123456789abcdefghijklmnopqrstuvwxyz
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "30dtoj"; //field will initialize its size by this string length
+char pin[] = "9696jr"; //field will initialize its size by this string length
 char password[] = "                               ";
 char email[] = "t@gmail.com";
 char username[] = "tedfeggg";
