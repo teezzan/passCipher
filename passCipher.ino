@@ -77,8 +77,9 @@ using namespace Menu;
 #define fontH 15
 
 SSD1306AsciiWire oled;
-#define SOFT_DEBOUNCE_MS 100
+#define SOFT_DEBOUNCE_MS 150
 
+#define INP 32
 //////////////////////////////////////////////////////////
 
 //list of allowed characters
@@ -417,8 +418,8 @@ void setup() {
 
 
   Serial.println("menu 4.x test"); Serial.flush();
-  Wire.begin(4, 5);
-  oled.begin(&Adafruit128x64, I2C_ADDRESS);
+  Wire.begin(4, 15);
+  oled.begin(&Adafruit128x64, I2C_ADDRESS, 16);
   oled.setFont(menuFont);
 
   oled.clear();
@@ -439,6 +440,7 @@ void loop()
 {
   //  readTypeCredentials("3928", pin );
   //  delay(2000);
+  readKey();
   nav.poll();
 
 }

@@ -319,3 +319,45 @@ void listStoredCredentials(fs::FS &fs, const char * dirname, uint8_t levels, int
     file = root.openNextFile();
   }
 }
+
+void readKey() {
+  int val = analogRead(INP);
+//  Serial.print("val =");
+//  Serial.println(val);
+  if (val > 2650 && val < 2900) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    nav.doNav(enterCmd);
+    delay(SOFT_DEBOUNCE_MS);
+//    Serial.println("Select");
+  }
+  else if (val > 1800 && val < 1835) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    nav.doNav(rightCmd);
+    delay(SOFT_DEBOUNCE_MS);
+//    Serial.println("Right");
+  }
+  else if (val ==  0) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    nav.doNav(leftCmd);
+    delay(SOFT_DEBOUNCE_MS);
+//    Serial.println("Left");
+  }
+  else if (val > 410 && val < 430) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    nav.doNav(downCmd);
+    delay(SOFT_DEBOUNCE_MS);
+//    Serial.println("Up");
+  }
+  else if (val > 1125 && val < 1195) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    nav.doNav(upCmd);
+    delay(SOFT_DEBOUNCE_MS);
+//    Serial.println("Down");
+  }
+
+}
