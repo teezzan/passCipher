@@ -322,42 +322,77 @@ void listStoredCredentials(fs::FS &fs, const char * dirname, uint8_t levels, int
 
 void readKey() {
   int val = analogRead(INP);
-//  Serial.print("val =");
-//  Serial.println(val);
+  //  Serial.print("val =");
+  //  Serial.println(val);
   if (val > 2650 && val < 2900) {
     delay(SOFT_DEBOUNCE_MS);
     while (analogRead(INP) != 4095);
     nav.doNav(enterCmd);
     delay(SOFT_DEBOUNCE_MS);
-//    Serial.println("Select");
+    //    Serial.println("Select");
   }
   else if (val > 1800 && val < 1835) {
     delay(SOFT_DEBOUNCE_MS);
     while (analogRead(INP) != 4095);
     nav.doNav(rightCmd);
     delay(SOFT_DEBOUNCE_MS);
-//    Serial.println("Right");
+    //    Serial.println("Right");
   }
   else if (val ==  0) {
     delay(SOFT_DEBOUNCE_MS);
     while (analogRead(INP) != 4095);
     nav.doNav(leftCmd);
     delay(SOFT_DEBOUNCE_MS);
-//    Serial.println("Left");
+    //    Serial.println("Left");
   }
   else if (val > 410 && val < 430) {
     delay(SOFT_DEBOUNCE_MS);
     while (analogRead(INP) != 4095);
     nav.doNav(downCmd);
     delay(SOFT_DEBOUNCE_MS);
-//    Serial.println("Up");
+    //    Serial.println("Up");
   }
   else if (val > 1125 && val < 1195) {
     delay(SOFT_DEBOUNCE_MS);
     while (analogRead(INP) != 4095);
     nav.doNav(upCmd);
     delay(SOFT_DEBOUNCE_MS);
-//    Serial.println("Down");
+    //    Serial.println("Down");
+  }
+
+}
+
+int readKeyReturnVal() {
+  int val = analogRead(INP);
+  if (val > 2650 && val < 2900) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    delay(SOFT_DEBOUNCE_MS);
+    return 1;
+  }
+  else if (val > 1800 && val < 1835) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    delay(SOFT_DEBOUNCE_MS);
+    return 2;
+  }
+  else if (val ==  0) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    delay(SOFT_DEBOUNCE_MS);
+    return 3;
+  }
+  else if (val > 410 && val < 430) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    delay(SOFT_DEBOUNCE_MS);
+    return 4;
+  }
+  else if (val > 1125 && val < 1195) {
+    delay(SOFT_DEBOUNCE_MS);
+    while (analogRead(INP) != 4095);
+    delay(SOFT_DEBOUNCE_MS);
+    return 5;
   }
 
 }

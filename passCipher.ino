@@ -126,24 +126,24 @@ result showListEvent(eventMask e)
   state = 2; //PIn mode
 
   int escape = 0;
-  String inp = "";
+  int inp = -1;;
   int index = 0;
   //  oled.clear();
   while (escape == 0) {
-    inp = Serial.readString();
-    if (inp != "") {
+    inp = readKeyReturnVal();
+    if (inp != -1) {
 
-      if (inp == "+\n") {
+      if (inp == 5) {
         if (index != 11)//TBD
           index++;
-      } else if (inp == "-\n") {
+      } else if (inp == 4) {
         if (index != 0)
           index--;
       }
-      else if (inp == "/\n") {
+      else if (inp == 3) {
         escape = -1;
       }
-      else if (inp == "*\n") {
+      else if (inp == 2) {
         escape = 1;
       }
       Serial.print(inp);
@@ -195,7 +195,7 @@ result authEvent(eventMask e)
       oled.print("auth as user ");
       oled.println(current_user_number);
       listStoredCredentials(SPIFFS, "/", 0, current_user_number);
-      delay(2000);
+      delay(1500);
       oled.clear();
       return proceed;
     }
@@ -206,15 +206,21 @@ result authEvent(eventMask e)
 
 result displayEvent(eventMask e)
 {
-  String inp = "";
+  bool inp = false;
   oled.clear();
   oled.setCursor(0, 0);
   oled.println(user_out.email);
   oled.println(user_out.password);
 
-  while (inp == "") {
+  while (!inp) {
 
-    inp = Serial.readString();
+    int val = analogRead(INP);
+    if (val > 2650 && val < 2900) {
+      delay(SOFT_DEBOUNCE_MS);
+      while (analogRead(INP) != 4095);
+      delay(SOFT_DEBOUNCE_MS);
+      inp = true;
+    }
   }
 
   return proceed;
@@ -239,7 +245,7 @@ result savePasswordEvent(eventMask e)
   Serial.println(email);
   Serial.println(username);
   save_user_credential(website, password, email, username , pin);
-
+  listStoredCredentials(SPIFFS, "/", 0, current_user_number);
   return proceed;
 
 
