@@ -6,8 +6,19 @@
 #include <stdio.h>
 #include <hwcrypto/aes.h>
 #include "mbedtls/aes.h"
+
+
 #include <BleKeyboard.h>
 BleKeyboard bleKeyboard;
+
+
+
+#include "WiFi.h"
+//#include <Http.h>
+//#include <HTTPClient.h>
+#include "ESPAsyncWebServer.h"
+#include <ESPmDNS.h>
+#include <ArduinoJson.h>
 
 
 
@@ -39,7 +50,7 @@ char key2[33] = "p19c72";
 char key3[33] = "it8vu6";
 int current_user_number = 0;
 String list[100] = {};
-
+bool auth = false;
 
 
 
@@ -80,6 +91,11 @@ SSD1306AsciiWire oled;
 #define SOFT_DEBOUNCE_MS 150
 
 #define INP 32
+/////////////////////////////////////////////////////////
+AsyncWebServer server(80);
+AsyncWebSocket ws("/ws");
+
+AsyncWebSocketClient * globalClient = NULL;
 //////////////////////////////////////////////////////////
 
 //list of allowed characters
@@ -250,6 +266,15 @@ result savePasswordEvent(eventMask e)
 
 
 }
+result logOutEvent(eventMask e)
+{
+  oled.print("Restarting...");
+  delay(2000);
+  ESP.restart();
+  return proceed;
+
+
+}
 
 int test = 1;
 
@@ -356,6 +381,7 @@ MENU(subPassword, "Details", showListEvent, enterEvent, wrapStyle,
 MENU(subMenu, "Continue", authEvent, enterEvent, wrapStyle,
      SUBMENU(subPassword),
      SUBMENU(newDetailsMenu),
+     OP("Logout", logOutEvent, enterEvent),
      EXIT("<Back"));
 
 MENU(subEnterPinMenu, "Enter Pin", showEvent, noEvent, wrapStyle,
