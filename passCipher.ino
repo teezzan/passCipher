@@ -51,7 +51,7 @@ char key3[33] = "it8vu6";
 int current_user_number = 0;
 String list[100] = {};
 bool auth = false;
-
+char passws[33];
 
 
 
@@ -356,6 +356,28 @@ result showPasswordEvent(eventMask e)
   return proceed;
 }
 
+result onWSServer(eventMask e)
+{
+  WiFi.begin("HassanSpot1");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected.");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+  ws.onEvent(onWsEvent);
+  server.addHandler(&ws);
+  server.begin();
+
+  return proceed;
+
+
+}
+
 
 
 ///////////////////////////////////////////////////////////////////
@@ -393,6 +415,7 @@ MENU(mainMenu, "Main menu", doNothing, noEvent, wrapStyle,
 
      SUBMENU(subEnterPinMenu),
      OP("Create New User", createUserEvent, enterEvent),
+     OP("Start WebPage", onWSServer, enterEvent),
      EXIT("<Back"));
 
 keyMap joystickBtn_map[] = {
@@ -447,6 +470,7 @@ void setup() {
     Serial.println("SPIFFS Mount Failed");
     return;
   }
+
 
 
   Serial.println("menu 4.x test"); Serial.flush();

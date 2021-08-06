@@ -38,12 +38,16 @@ void listCred() {
 
 }
 
+
 void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventType type, void * arg, uint8_t *data, size_t len) {
 
   if (type == WS_EVT_CONNECT) {
 
     Serial.println("Websocket client connection received");
+    Serial.println("Generating PassKey");
     globalClient = client;
+    itoa(random(100000000, 999999999), passws, 32);
+    Serial.println(passws);
 
   } else if (type == WS_EVT_DISCONNECT) {
 
@@ -89,6 +93,23 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
           delay(100);
           send_state(true, "restart");
           ESP.restart();
+        }
+        else if (strcmp(command, "auth")  == 0 ) {
+
+          //reply
+          Serial.print("Authing with ");
+          Serial.println(passws);
+          if (strcmp(obj["pass"], passws)  == 0 ) {
+            Serial.println("AUth Successful");
+            send_state(true, "auth");
+            auth= true;
+          } else {
+            delay(100);
+            Serial.println("AUth Fail");
+            send_state(false, "auth");
+
+          }
+
         }
       }
     }
