@@ -114,7 +114,9 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
 
         }
         else if ((strcmp(command, "login")  == 0) && auth) {
-          current_user_number = getUserNumber(obj["pass"]);
+          char pin[32];
+          strcpy(pin,obj["pass"]);
+          current_user_number = getUserNumber(pin);
           if (current_user_number != -1 ) {
             Serial.println("Login Successful");
             send_state(true, "login");
@@ -124,6 +126,11 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
             send_state(false, "login");
 
           }
+
+        }
+
+        else if ((strcmp(command, "list")  == 0) && auth && (current_user_number >= 0)) {
+
 
         }
       }
@@ -149,4 +156,20 @@ void send_state(bool state, const char *msg) {
 
 
   return;
+}
+
+void send_credential_list() {
+  DynamicJsonDocument  doc(500);
+  doc["command"] = "credentials";
+  JsonArray data = doc.createNestedArray("credentials");
+  for (int i = 0; i < 100; i++) {
+    data.add(list[i]);
+  }
+
+  String buf((char *)0);
+  buf.reserve(1 + measureJson(doc));
+  serializeJson(doc, buf);
+  ws.textAll(buf.c_str());
+  return;
+
 }
