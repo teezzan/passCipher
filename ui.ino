@@ -48,11 +48,13 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
     globalClient = client;
     itoa(random(100000000, 999999999), passws, 32);
     Serial.println(passws);
+    auth = true;
 
   } else if (type == WS_EVT_DISCONNECT) {
 
     Serial.println("Websocket client connection finished");
     globalClient = NULL;
+    auth = false;
 
   } else if (type == WS_EVT_DATA) {
 
@@ -102,11 +104,24 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
           if (strcmp(obj["pass"], passws)  == 0 ) {
             Serial.println("AUth Successful");
             send_state(true, "auth");
-            auth= true;
+            auth = true;
           } else {
             delay(100);
             Serial.println("AUth Fail");
             send_state(false, "auth");
+
+          }
+
+        }
+        else if ((strcmp(command, "login")  == 0) && auth) {
+          current_user_number = getUserNumber(obj["pass"]);
+          if (current_user_number != -1 ) {
+            Serial.println("Login Successful");
+            send_state(true, "login");
+          } else {
+            delay(100);
+            Serial.println("Login Fail");
+            send_state(false, "login");
 
           }
 
