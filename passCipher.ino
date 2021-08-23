@@ -329,7 +329,6 @@ result showUsernameEvent(eventMask e)
   Serial.println("Teezzan");
   if (bleKeyboard.isConnected()) {
     bleKeyboard.print("Hello world. oh");
-    //
   }
   state = 4;
   return proceed;

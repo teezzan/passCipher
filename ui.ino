@@ -89,7 +89,6 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
       if (command != nullptr) {
 
         if (strcmp(command, "restart")  == 0 && auth) {
-
           //reply
           Serial.println("restart");
           delay(100);
@@ -115,7 +114,7 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
         }
         else if ((strcmp(command, "login")  == 0) && auth) {
           char pin[32];
-          strcpy(pin,obj["pass"]);
+          strcpy(pin, obj["pass"]);
           current_user_number = getUserNumber(pin);
           if (current_user_number != -1 ) {
             Serial.println("Login Successful");
@@ -130,8 +129,13 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
         }
 
         else if ((strcmp(command, "list")  == 0) && auth && (current_user_number >= 0)) {
-
-
+          send_credential_list();
+        }
+        else if ((strcmp(command, "get_credential")  == 0) && auth && (current_user_number >= 0)) {
+          char dir[32];
+          strcpy(dir, obj["dir"]);
+          read_user_credential(dir, pin);
+          send_credential();
         }
       }
     }
@@ -159,13 +163,26 @@ void send_state(bool state, const char *msg) {
 }
 
 void send_credential_list() {
-  DynamicJsonDocument  doc(500);
-  doc["command"] = "credentials";
+  DynamicJsonDocument  doc(700);
+  doc["command"] = "list";
   JsonArray data = doc.createNestedArray("credentials");
   for (int i = 0; i < 100; i++) {
     data.add(list[i]);
   }
 
+  String buf((char *)0);
+  buf.reserve(1 + measureJson(doc));
+  serializeJson(doc, buf);
+  ws.textAll(buf.c_str());
+  return;
+
+}
+void send_credential() {
+  DynamicJsonDocument  doc(300);
+  doc["command"] = "credential";
+  doc["email"] = user_out.email;
+  doc["username"] = user_out.username;
+  doc["password"] = user_out.password;
   String buf((char *)0);
   buf.reserve(1 + measureJson(doc));
   serializeJson(doc, buf);
