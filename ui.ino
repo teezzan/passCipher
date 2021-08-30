@@ -123,7 +123,6 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
             delay(100);
             Serial.println("Login Fail");
             send_state(false, "login");
-
           }
 
         }
@@ -131,12 +130,28 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
         else if ((strcmp(command, "list")  == 0) && auth && (current_user_number >= 0)) {
           send_credential_list();
         }
+
         else if ((strcmp(command, "get_credential")  == 0) && auth && (current_user_number >= 0)) {
           char dir[32];
           strcpy(dir, obj["dir"]);
           read_user_credential(dir, pin);
           send_credential();
         }
+        else if ((strcmp(command, "add_credential")  == 0) && auth) {
+          char email[64];
+          char username[64];
+          char password[64];
+          strcpy(email, obj["email"]);
+          strcpy(username, obj["username"]);
+          strcpy(password, obj["password"]);
+
+          save_user_credential(website, password, email, username , pin);
+          listStoredCredentials(SPIFFS, "/", 0, current_user_number);
+          send_state(true, "add_credential");
+          
+
+        }
+
       }
     }
   }
@@ -181,7 +196,6 @@ void send_credential() {
   DynamicJsonDocument  doc(300);
   doc["command"] = "credential";
   doc["email"] = user_out.email;
-  doc["username"] = user_out.username;
   doc["password"] = user_out.password;
   String buf((char *)0);
   buf.reserve(1 + measureJson(doc));
