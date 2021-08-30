@@ -27,10 +27,17 @@
         <br>
         <div>
             <textarea id="textbox" name="w3review" rows="4" cols="50" placeholder="Enter Payload"></textarea>
+            <textarea id="textbox" name="display" rows="4" cols="50" placeholder="Display "></textarea>
         </div>
-
+         <hr>
         <div>
+        <input type="email" name="email" id="email_input" placeholder="email">
+        <input type="password" name="password" id="password_input" placeholder="password">
+        <input type="text" name="username" id="username_input" placeholder="username">
+        <br>
         <button onclick="getCredentialList()">Get Credential List</button>
+        <button onclick="addCredentialList()">Add Credential</button>
+        <button onclick="deleteCredentialList()">Delete Credential</button>
         </div>
     </div>
     <script src="index.js"></script>
