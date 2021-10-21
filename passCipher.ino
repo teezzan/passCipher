@@ -495,7 +495,7 @@ void loop()
 {
   //  readTypeCredentials("3928", pin );
   //  delay(2000);
-  readKey();
+//  readKey();
   nav.poll();
 
 }
