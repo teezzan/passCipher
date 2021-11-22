@@ -57,6 +57,23 @@ bool save_user_credential(const char * website, const char * password, const cha
   return save_encode_credential(SPIFFS, str, key, password, email, username );
 }
 
+bool delete_user_credential(const char * website, char * key ) {
+
+  char str[32];
+  char buf[4];
+
+  sprintf(buf, "%d", current_user_number);
+  strcpy(str, "/");
+  strcat(str, buf);
+  strcat(str, "/");
+  strcat(str, website);
+  strcat(str, ".txt\0");
+
+  Serial.println(str);
+  deleteFile(SPIFFS, str);
+  return true;
+}
+
 
 bool read_decode_credential(fs::FS &fs, const char * path,  char * key ) {
   char fullkey[17];
@@ -282,6 +299,7 @@ int getUserNumber(char * key) {
 }
 
 void listStoredCredentials(fs::FS &fs, const char * dirname, uint8_t levels, int usernum) {
+  std::fill_n(list, 100, "");
   String temp = "";
   char str[5] = "/";
   int index = 0;

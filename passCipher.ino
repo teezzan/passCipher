@@ -106,7 +106,7 @@ const char *const alphaunNum[] MEMMODE = {" 0123456789abcdefghijklmnopqrstuvwxyz
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "9696jr"; //field will initialize its size by this string length
+char pin[] = "ovuvog"; //field will initialize its size by this string length
 char password[] = "                               ";
 char email[] = "t@gmail.com";
 char username[] = "tedfeggg";
@@ -357,7 +357,7 @@ result showPasswordEvent(eventMask e)
 
 result onWSServer(eventMask e)
 {
-  WiFi.begin("HassanSpot1");
+  WiFi.begin("HassanSpot", "xxxxxxxx" );
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -469,6 +469,7 @@ void setup() {
     Serial.println("SPIFFS Mount Failed");
     return;
   }
+  std::fill_n(list, 100, "");
 
 
 

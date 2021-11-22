@@ -1,0 +1,30 @@
+[
+{
+    "command":"auth",
+    "pass": "ddro89"
+},
+{
+    "command":"login",
+    "pass": "ovuvog"
+},
+{
+    "command":"list"
+},
+{
+    "command":"get_credential",
+    "dir":"twitter"
+},
+{
+    "command":"add_credential",
+    "email":"teehazzan@gmail.com",
+    "username":"tezaasd",
+    "password":"passwape34d@@!",
+    "website":"gmail"
+},
+{
+    "command":"add_credential_gen_password",
+    "email":"teehazzan@gmail.com",
+    "username":"fbbbd",
+    "website":"fb"
+}
+]
