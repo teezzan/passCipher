@@ -35,6 +35,13 @@ function list() {
     }
     websock.send(JSON.stringify(data));
 }
+function delete_cred(dir) {
+    let data = {
+        command: "delete_credential",
+        dir
+    }
+    websock.send(JSON.stringify(data));
+}
 
 function get_credential(dir) {
     let data = {
@@ -113,15 +120,22 @@ function socketMessageListener(evt) {
                 list();
             }
             break;
+        case "delete_credential":
+            if (data.state = "success") {
+                console.log("Removed Successfully!");
+                reload();
+                list();
+            }
+            break;
         case "get_credential":
             if (data.state = "success") {
                 console.log("Added Successfully!");
                 let index = cred_list.findIndex((credential) => credential.website == data.dir)
                 console.log(index);
                 if (index != -1) {
-                    cred_list[index].email=data.email
-                    cred_list[index].password=data.password
-                    cred_list[index].username=data.username
+                    cred_list[index].email = data.email
+                    cred_list[index].password = data.password
+                    cred_list[index].username = data.username
                 }
                 console.log(cred_list[index])
             }
