@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,110 +8,87 @@
   <title>Document</title>
   <link rel="stylesheet" href="s.css">
 </head>
-<script>
-  function show(shown, hidden) {
-  document.getElementById(shown).style.display='block';
-  document.getElementById(hidden).style.display='none';
-}
-</script>
+
 <body>
-  <div class = 'body'>
-    <main class = 'header'>
-    <div class = 'table-row'>
-    <h4> S/N </h4>
-    <h4> Website </h4>
-    <h4> Username</h4>
-    <h4> Email </h4>
-    <h4 class = 'eqv'> Password </h4>
-    <span></span>
-  </div>
-  </main>
-  <main class = 'table'>
-    <div class = 'table-row-1' >
-    <h4> 1 </h4>
-    <h4> twitter.com </h4>
-    <h4> Kazuma</h4>
-    <h4> teezhan@gmail.com </h4>
-    <h4 class = 'eqv'> *** </h4>
-    <span onclick="myFunction()"> <img alt = '/' src = 'option.svg' id = 'option'> </span>
-  </div>
-  </main>
-  <details>
-    <summary>
-      <div class="button">
-        Next
+  <div class='body'>
+    <main class='header'>
+      <div class='table-row'>
+        <h4> S/N </h4>
+        <h4> Website </h4>
+        <h4> Username</h4>
+        <h4> Email </h4>
+        <h4 class='eqv'> Password </h4>
+        <span></span>
       </div>
-      <div class="details-modal-overlay"></div>
-    </summary>
-    <div class="details-modal" id = 'modal0' >
-      <div class="details-modal-close">
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z" fill="black" />
-        </svg>
+    </main>
+    <main class='table'>
+      <div class='table-row-1'>
+        <h4> 1 </h4>
+        <h4> twitter.com </h4>
+        <h4> Kazuma</h4>
+        <h4> teezhan@gmail.com </h4>
+        <h4 class='eqv'> *********** </h4>
+        <span onclick="myFunction()"> <img alt='/' src='option.svg' id='option'> </span>
       </div>
-      <div class="details-modal-title">
-        <div class="Form-field" >
-      <div id="land" class ='page' style ='display: block'>
-        <div class="Form-header">
-          <h1>PassCipher</h1>
-          <h4> Connect to your device</h4>
+    </main>
+    <details id="mod" style="display:block;">
+      <summary>
+        <div class="button">
+          SetUp Device
         </div>
-        <hr />
-          <div class="Form-body">
-            <div class="col-start">
-              <div class="Form-group">
-                <label for="name">Ip Address </label><br />
-                <input type="text" name="name" id="name" class="Form-control" />
+        <div class="details-modal-overlay"></div>
+      </summary>
+      <div class="details-modal" id='modal0'>
+        <div class="details-modal-close">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z"
+              fill="black" />
+          </svg>
+        </div>
+        <div class="details-modal-title">
+          <div class="Form-field">
+            <div id="land" class='page' style='display: block'>
+              <div class="Form-header">
+                <h1>PassCipher</h1>
               </div>
-              <div class="Form-group">
-                <label for="email">Device Pin</label><br />
-                <input
-                  type="password"
-                  name="name"
-                  id="email"
-                  class="Form-control"
-                  placeholder="Enter Pin"
-                  />
+              <hr />
+              <div class="Form-body" id="conntab" style="display:block;">
+                <div class="col-start">
+                  <h4> Connect to your device</h4>
+
+                  <div class="Form-group">
+                    <label for="name">Ip Address </label><br />
+                    <input type="text" name="ip" id="ip" class="Form-control" />
+                  </div>
+                  <div class="Form-group">
+                    <label for="email">Device Pin</label><br />
+                    <input type="password" name="pin" id="pin" class="Form-control" value="ddro89" placeholder="Enter Pin" />
+                  </div>
+                  <div class="button" onclick="connectWS()">
+                    Connect
+                  </div>
                 </div>
-                <details >
-                  <summary>
-                    <div class="button" >
-                      Login
-                    </div>
-                    <div class="Details-modal-overlay"></div>
-                  </summary>
-                  <div class="Details-modal" >
-                    <div class="Details-modal-close">
-                      <!-- <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z" fill="black" />
-                      </svg> -->
-                    </div>
-                    <div class="Details-modal-title">
-                      <div class="Details-modal-title">
-                        <div class = "Form-field page" >
-                      <div>
-                      <h1>PassCipher</h1>
-                      <h4> Log in to account </h4>
-                    </div>
-                    <hr />
-                    <div class="Form-body">
-                      <div class="Col-start">
-                        <div class="Form-group">
-                          <label for="email">Pin</label><br />
-                          <input
-                            type="password"
-                            name="name"
-                            id="email1"
-                            class="Form-control"
-                            placeholder="Enter Pin"
-                          />
-                          <a href = 'index.html' class="Submit-btn">
-                            Log In
-                          </a>
-                    </div>
-                    </details>
-                    </details>
+              </div>
+              <div class="Form-body" id="passtab" style="display:none;">
+                <h4> Login</h4>
+                <div class="col-start">
+                  <div class="Form-group">
+                    <label for="email">User Pin</label><br />
+                    <input type="password" name="pin" id="pass" class="Form-control" placeholder="Enter Pin" />
+                  </div>
+                  <div class="button" onclick="login()">
+                    Login
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
   </div>
-</div>
+  <script src="index.js"></script>
 </body>
+
 </html>

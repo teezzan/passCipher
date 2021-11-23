@@ -10,6 +10,7 @@ function connectWS() {
     websock.onopen = function (evt) {
         console.log("Websocket Opened Successfully.");
         authorize(document.getElementById('pin').value);
+        
     };
 }
 
@@ -96,6 +97,7 @@ function socketMessageListener(evt) {
             if (data.state = "success") {
                 console.log("Aithed Successfully!");
                 isAuth = true;
+                toggleModal();
                 // window.location.href = "login.html";
             }
             break;
@@ -104,6 +106,7 @@ function socketMessageListener(evt) {
                 console.log("Login Successfully!");
                 isLogin = true;
                 list();
+                document.getElementById("mod").style.display = 'none';
             }
             break;
         case "list":
@@ -145,3 +148,20 @@ function socketMessageListener(evt) {
             break;
     }
 }
+
+
+function show(shown, hidden) {
+    document.getElementById(shown).style.display = 'block';
+    document.getElementById(hidden).style.display = 'none';
+  }
+  function toggleModal() {
+    var x = document.getElementById("conntab");
+    var y = document.getElementById("passtab");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+      y.style.display = "none";
+    } else {
+      x.style.display = "none";
+      y.style.display = "block";
+    }
+  }
