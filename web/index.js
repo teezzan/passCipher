@@ -70,6 +70,18 @@ function add_credential_without_password(email, username, website) {
     }
     websock.send(JSON.stringify(data));
 }
+
+function populate_credentials(cred) {
+    cred_list = cred.map(dir => {
+        return {
+            website: dir,
+            email: null,
+            username: null,
+            password: null,
+        }
+    });
+
+}
 function socketMessageListener(evt) {
     let data = JSON.parse(evt.data)
     switch (data.resultof) {
@@ -84,12 +96,13 @@ function socketMessageListener(evt) {
             if (data.state = "success") {
                 console.log("Login Successfully!");
                 isLogin = true;
+                list();
             }
             break;
         case "list":
             if (data.state = "success") {
                 console.log("List Successfully!");
-                cred_list = data.credentials;
+                populate_credentials(data.credentials)
                 console.log(cred_list);
             }
             break;
@@ -103,7 +116,14 @@ function socketMessageListener(evt) {
         case "get_credential":
             if (data.state = "success") {
                 console.log("Added Successfully!");
-                console.log(data)
+                let index = cred_list.findIndex((credential) => credential.website == data.dir)
+                console.log(index);
+                if (index != -1) {
+                    cred_list[index].email=data.email
+                    cred_list[index].password=data.password
+                    cred_list[index].username=data.username
+                }
+                console.log(cred_list[index])
             }
             break;
         default:
