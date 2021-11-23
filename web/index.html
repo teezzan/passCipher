@@ -8,31 +8,27 @@
   <link rel="stylesheet" href="s.css">
 </head>
 <body>
-  <div class="container">
-    <div class="form-field" >
-      <div id="land" class ='page' style ='display: block'>
-        <div class="form-header">
-          <h1>PassCipher</h1>
-          <h4> Connect to your device</h4>
-        </div>
-        <hr />
-          <div class="form-body">
-            <div class="col-start">
-              <div class="form-group">
-                <label for="name">Ip Address </label><br />
-                <input type="text" name="name" id="name" class="form-control" />
-              </div>
-              <div class="form-group">
-                <label for="email">Pin</label><br />
-                <input
-                  type="password"
-                  name="name"
-                  id="email"
-                  class="form-control"
-                  placeholder="Enter Pin"
-                />
-            <!-- </div> -->
-        </div>
+  <div class = 'body'>
+    <main class = 'header'>
+    <div class = 'table-row'>
+    <h4> S/N </h4>
+    <h4> Website </h4>
+    <h4> Username</h4>
+    <h4> Email </h4>
+    <h4 class = 'eqv'> Password </h4>
+    <span></span>
+  </div>
+  </main>
+  <main class = 'table'>
+    <div class = 'table-row-1' >
+    <h4> 1 </h4>
+    <h4> twitter.com </h4>
+    <h4> Kazuma</h4>
+    <h4> teezhan@gmail.com </h4>
+    <h4 class = 'eqv'> *** </h4>
+    <span onclick="myFunction()"> <img alt = '/' src = 'option.svg' id = 'option'> </span>
+  </div>
+  </main>
   <details>
     <summary>
       <div class="button">
@@ -64,13 +60,14 @@
             class="Form-control"
             placeholder="Enter Pin"
           />
-          <a href = 'home.html' class="Submit-btn">
+          <a href = 'index.html' class="Submit-btn">
             Log In
           </a>
     </div> 
       </div>
     </div>
   </details>
+  </div>
 </div>
 </body>
 </html>

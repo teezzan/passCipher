@@ -39,10 +39,13 @@ body {
   background-color: #5850eb;
   border-radius: 6px;
   display: flex;
+  width: 20%;
   cursor: pointer;
   padding: 1rem 3rem;
   text-align: center;
-  margin: 1rem 0;
+  margin:2rem auto ;
+  justify-content:center;
+  align-items: center;
 }
 .button:hover {
   background-color: #4640b6;
@@ -328,4 +331,55 @@ code {
   padding: 1rem 3rem;
   text-align: center;
   margin: 1rem 0;
+}
+.body{
+  margin: 0;
+  padding: 0;
+  font-family: "roboto", sans-serif;
+  font-size: 16px;
+  background-color: #f2f2f2;
+  color: #374151;
+  width: 100%;
+  min-height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.header{
+  padding: 2rem 2.5rem 0;
+}
+.table-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    background-color: #031037d5;
+    border: 1px solid #DDDADA;
+    border-radius: 8px;
+    margin: .5rem 0;
+    padding: 0 1.5rem;
+    color: white;
+    font-weight: 400;
+}
+.eqv{
+    margin-right: 1rem;
+}
+.table{
+  padding:0 2.5rem;
+}
+.table-row-1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    background-color: #F8FAFD;
+    border: 1px solid #DDDADA;
+    border-radius: 8px;
+    margin: .5rem 0;
+    padding: 0 1.5rem;
+    color: black;
+    font-weight: 400;
+}
+#option{
+  width: 24px;
+  height: 24px;
 }
