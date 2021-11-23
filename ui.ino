@@ -135,14 +135,13 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
         else if ((strcmp(command, "list")  == 0) && auth && (current_user_number >= 0)) {
           Serial.println("Listing");
           send_credential_list();
-          send_state(true, "list");
         }
 
         else if ((strcmp(command, "get_credential")  == 0) && auth && (current_user_number >= 0)) {
           char dir[32];
           strcpy(dir, obj["dir"]);
           read_user_credential(dir, pin);
-          send_credential();
+          send_credential(dir);
         }
         else if ((strcmp(command, "delete_credential")  == 0) && auth && (current_user_number >= 0)) {
           char dir[32];
@@ -178,7 +177,7 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
           strcpy(website, obj["website"]);
 
           save_user_credential(website, password, email, username , pin);
-          send_state(true, ("add_credential:" + String(password)).c_str());
+          send_state(true, "add_credential");
 
 
         }
@@ -204,28 +203,35 @@ void send_state(bool state, const char *msg) {
 
   serializeJson(doc, buf);
   ws.textAll(buf.c_str());
-  ws.textAll("gotcha");
   Serial.println("Sent State");
   return;
 }
 
 void send_credential_list() {
-  String output = "[";
+  DynamicJsonDocument  doc(700);
+  doc["resultof"] = "list";
+  doc["status"] = "success";
+
+  JsonArray data = doc.createNestedArray("credentials");
+
   for (int i = 0; i < 100; i++) {
     if (list[i] != "") {
-      output += "'";
-      output += String(list[i]);
-      output += "',";
+      data.add(list[i]);
     }
   }
-  output += "]";
-  ws.textAll(output.c_str());
+  String buf((char *)0);
+  buf.reserve(1 + measureJson(doc));
+
+  serializeJson(doc, buf);
+  ws.textAll(buf.c_str());
   return;
 
 }
-void send_credential() {
+void send_credential(const char *dir) {
   DynamicJsonDocument  doc(700);
-  doc["command"] = "credential";
+  doc["resultof"] = "get_credential";
+  doc["status"] = "success";
+  doc["dir"] = dir;
   doc["email"] = user_out.email;
   doc["password"] = user_out.password;
   String buf((char *)0);
