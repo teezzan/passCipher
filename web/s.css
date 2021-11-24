@@ -67,6 +67,21 @@ body {
   display: flex;
   flex-direction: column;
 }
+.delete-modal {
+  background: #ffffff;
+  border-radius: 0.5em;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  pointer-events: all;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 30em;
+  text-align: center;
+  height: 20rem;
+  z-index: 2;
+}
 .Details-modal {
   background: #ffffff;
   border-radius: 0.5em;
@@ -336,13 +351,13 @@ code {
   margin-top: 1.5rem;
 }
 .Form-body .Form-group label {
-  line-height: 19px;
   font-size: 16px;
-  margin-bottom: 8px;
-  display: inline-block;
 }
 .Form-body .Form-group {
   margin-bottom: 16px;
+}
+.Form-body .Form-group input {
+  margin-top: 8px;
 }
 .Form-group .Form-control {
   background: #ffffff;
@@ -459,6 +474,13 @@ ul{
   list-style: none;
   text-align:center;
 }
+ul button{
+  border: none;
+  outline: none;
+  background-color: transparent;
+  font-size: 1rem;
+
+}
 ul span li {
   color: red;
   padding: 8px 0;
@@ -466,4 +488,10 @@ ul span li {
 details[open] .Details-Modal-overlay {
   pointer-events: none;
   opacity: 1;
+}
+.delete-modal .delete-modal-close {
+  align-items: center;
+  color: #111827;
+  pointer-events: none;
+  
 }

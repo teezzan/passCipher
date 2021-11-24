@@ -183,3 +183,11 @@ function toggleModal() {
 function myFunction(id){
     console.log(id);
 }
+function editModal() {
+  var modalEdit = document.getElementById('editMode')
+  modalEdit.style.display = 'block'
+}
+function editModal0() {
+  var modalEdit0 = document.getElementById('editMode0')
+  modalEdit0.style.display = 'block'
+}

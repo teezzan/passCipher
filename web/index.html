@@ -36,10 +36,14 @@
         <div class = 'options-modal'>
           <div class = 'options-drp'>
           <ul>
-            <li> Edit </li>
-            <span>
-              <li> Delete </li>
-            </span>
+            <button onclick ="editModal()">
+              <li> Edit </li>
+            </button>
+            <button onclick = "editModal0()">
+              <span>
+                <li> Delete </li>
+              </span>
+            </button>
           </ul>
         </div>
         </div>
@@ -102,6 +106,81 @@
         </div>
       </div>
     </details>
+      <div class="details-modal" style ="display:none" id = 'editMode' >
+          <div class="details-modal-close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7071 1.70711C14.0976 1.31658 14.0976 0.683417 13.7071 0.292893C13.3166 -0.0976311 12.6834 -0.0976311 12.2929 0.292893L7 5.58579L1.70711 0.292893C1.31658 -0.0976311 0.683417 -0.0976311 0.292893 0.292893C-0.0976311 0.683417 -0.0976311 1.31658 0.292893 1.70711L5.58579 7L0.292893 12.2929C-0.0976311 12.6834 -0.0976311 13.3166 0.292893 13.7071C0.683417 14.0976 1.31658 14.0976 1.70711 13.7071L7 8.41421L12.2929 13.7071C12.6834 14.0976 13.3166 14.0976 13.7071 13.7071C14.0976 13.3166 14.0976 12.6834 13.7071 12.2929L8.41421 7L13.7071 1.70711Z" fill="black" />
+            </svg>
+          </div>
+          <div class="details-modal-title">
+            <div class = "Form-field page" >
+          <div>
+          <h1>PassCipher</h1>
+          <h4> Edit your info </h4>
+        </div>
+        <hr />
+        <div class="Form-body">
+          <div class="Col-start">
+            <div class="Form-group">
+              <div style = 'margin-top: 10px'>
+              <label for="email">Website</label><br />
+              <input
+                type="text"
+                name="name"
+                id="email1"
+                class="Form-control"
+                placeholder="Website"
+              />
+              </div>
+              <div style = 'margin-top: 10px'>
+                <label for="email">Username</label><br />
+              <input
+                type="text"
+                name="name"
+                id="email1"
+                class="Form-control"
+                placeholder="Username"
+              />
+              </div>
+              <div style = 'margin-top: 10px'>
+              <label for="email">Email</label><br />
+              <input
+                type="email"
+                name="name"
+                id="email1"
+                class="Form-control"
+                placeholder="Email"
+              />
+              </div>
+              <a href = 'index.html' class="Submit-btn">
+                Log In
+              </a>
+        </div> 
+      </div>
+    </div>
+  </div>
+  </div>
+  
+</div>
+<div class="delete-modal" style ="display:none" id = 'editMode0' >
+  <div class="delete-modal-close">
+    <div class="delete-modal-title">
+    <div class = "Form-field page" >
+      <h1>PassCipher</h1> 
+  <div> 
+    <div>
+      <h3>Are you sure?</h3>
+    </div>
+    <div style = 'display: flex; justify-content: space-evenly; align-items: center; '>
+      <a href = 'index.html'>
+      <button style = 'padding: 1rem 3rem; border: none; background-color: green; color: white; margin: 2rem; border-radius: 10px;'>
+           Yes
+          </button>
+        </a>
+      <button style = 'padding: 1rem 3rem; border: none; background-color: red; color: black; margin: 2rem; border-radius: 10px;'>
+        <a href = 'index.html'>No</a>
+      </button>
+    </div>
   </div>
   <script src="index.js"></script>
 </body>
