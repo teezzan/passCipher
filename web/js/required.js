@@ -164,31 +164,3 @@ function socketMessageListener(evt) {
             break;
     }
 }
-
-
-function show(shown, hidden) {
-    document.getElementById(shown).style.display = 'block';
-    document.getElementById(hidden).style.display = 'none';
-}
-function toggleModal() {
-    var x = document.getElementById("conntab");
-    var y = document.getElementById("passtab");
-    if (x.style.display === "none") {
-        x.style.display = "block";
-        y.style.display = "none";
-    } else {
-        x.style.display = "none";
-        y.style.display = "block";
-    }
-}
-function myFunction(id){
-    console.log(id);
-}
-function editModal() {
-  var modalEdit = document.getElementById('editMode')
-  modalEdit.style.display = 'block'
-}
-function editModal0() {
-  var modalEdit0 = document.getElementById('editMode0')
-  modalEdit0.style.display = 'block'
-}
