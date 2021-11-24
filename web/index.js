@@ -10,6 +10,7 @@ function connectWS() {
     websock.onopen = function (evt) {
         console.log("Websocket Opened Successfully.");
         authorize(document.getElementById('pin').value);
+
     };
 }
 
@@ -79,8 +80,11 @@ function add_credential_without_password(email, username, website) {
 }
 
 function populate_credentials(cred) {
+    let id = 0;
     cred_list = cred.map(dir => {
+        id++;
         return {
+            id,
             website: dir,
             email: null,
             username: null,
@@ -89,6 +93,18 @@ function populate_credentials(cred) {
     });
 
 }
+function show_cred_table() {
+    let value;
+    cred_list.map(dir => {
+        value += `<div class='table-row-1'><h4> ${dir.id} </h4>`
+        value += `<h4> ${dir.website} </h4>`
+        value += `<h4> ${dir.username} </h4>`
+        value += `<h4 id="pass${dir.id}"> ********** </h4>`
+        value += `<span onclick="myFunction(${dir.id})"> <img alt='/' src='option.svg' id='option'> </span></div>`
+
+    });
+    document.getElementById('main_table').innerHTML = value;
+}
 function socketMessageListener(evt) {
     let data = JSON.parse(evt.data)
     switch (data.resultof) {
@@ -96,7 +112,7 @@ function socketMessageListener(evt) {
             if (data.state = "success") {
                 console.log("Aithed Successfully!");
                 isAuth = true;
-                // window.location.href = "login.html";
+                toggleModal();
             }
             break;
         case "login":
@@ -104,6 +120,7 @@ function socketMessageListener(evt) {
                 console.log("Login Successfully!");
                 isLogin = true;
                 list();
+                document.getElementById("mod").style.display = 'none';
             }
             break;
         case "list":
@@ -111,6 +128,7 @@ function socketMessageListener(evt) {
                 console.log("List Successfully!");
                 populate_credentials(data.credentials)
                 console.log(cred_list);
+                show_cred_table()
             }
             break;
         case "add_credential":
@@ -144,4 +162,24 @@ function socketMessageListener(evt) {
             console.log(evt);
             break;
     }
+}
+
+
+function show(shown, hidden) {
+    document.getElementById(shown).style.display = 'block';
+    document.getElementById(hidden).style.display = 'none';
+}
+function toggleModal() {
+    var x = document.getElementById("conntab");
+    var y = document.getElementById("passtab");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+        y.style.display = "none";
+    } else {
+        x.style.display = "none";
+        y.style.display = "block";
+    }
+}
+function myFunction(id){
+    console.log(id);
 }
