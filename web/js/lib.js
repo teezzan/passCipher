@@ -71,23 +71,33 @@ function reload() {
 }
 
 function add_credential(email, username, password, website) {
-    let data = {
-        command: "add_credential",
-        email,
-        username,
-        password,
-        website
+    if (!email || !username || !password || !website) {
+        alert("Empty fields not allowed")
     }
-    websock.send(JSON.stringify(data));
+    else {
+        let data = {
+            command: "add_credential",
+            email,
+            username,
+            password,
+            website
+        }
+        websock.send(JSON.stringify(data));
+    }
 }
 function add_credential_without_password(email, username, website) {
-    let data = {
-        command: "add_credential_gen_password",
-        email,
-        username,
-        website
+    if (!email || !username || !website) {
+        alert("Empty fields not allowed")
+    } else {
+
+        let data = {
+            command: "add_credential_gen_password",
+            email,
+            username,
+            website
+        }
+        websock.send(JSON.stringify(data));
     }
-    websock.send(JSON.stringify(data));
 }
 
 function populate_credentials(cred) {
@@ -207,7 +217,7 @@ function edit_cred_high_level() {
     )
 }
 function add_cred_high_level() {
-    console.log("yaya");
+
     if (document.querySelector('#password_add').value != "") {
 
         add_credential(
