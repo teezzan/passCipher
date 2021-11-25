@@ -2,6 +2,8 @@ let websock;
 let isAuth = false;
 let isLogin = false;
 let cred_list = [];
+let editMode = false;
+let current_website = null;
 
 col = [
     { name: 'id', title: 'id' },
@@ -34,7 +36,7 @@ function authorize(pass) {
 function login(pass) {
     let data = {
         command: "login",
-        pass: "ovuvog"
+        pass: "ivqv1l"
     }
     websock.send(JSON.stringify(data));
 }
@@ -103,13 +105,13 @@ function populate_credentials(cred) {
 
 }
 function show_cred_table() {
-    let value="";
+    let value = "";
     cred_list.map(dir => {
         value += `<tr data-id='${dir.id}'>`
         value += `<th scope="row">${dir.id}</th>`
         value += `<td> ${dir.website} </td>`
-        value += `<td> ${dir.email} </td>`
-        value += `<td> ${dir.username} </td>`
+        // value += `<td> ${dir.email} </td>`
+        // value += `<td> ${dir.username} </td>`
         value += `<td id="pass${dir.id}"> ********** </td>`
         value += `</tr>`
 
@@ -118,7 +120,7 @@ function show_cred_table() {
     $('.table > tbody > tr').click(function () {
         console.log("clicked", $(this).data("id"));
         edit($(this).data("id"));
-      });
+    });
 }
 function socketMessageListener(evt) {
     let data = JSON.parse(evt.data)
@@ -153,6 +155,7 @@ function socketMessageListener(evt) {
                 console.log("Added Successfully!");
                 reload();
                 list();
+                hide("#edit");
             }
             break;
         case "delete_credential":
@@ -160,6 +163,7 @@ function socketMessageListener(evt) {
                 console.log("Removed Successfully!");
                 reload();
                 list();
+                hide("#edit");
             }
             break;
         case "get_credential":
@@ -173,6 +177,15 @@ function socketMessageListener(evt) {
                     cred_list[index].username = data.username
                 }
                 console.log(cred_list[index])
+                if (editMode) {
+                    console.log(data);
+                    document.querySelector('#email').value = data.email;
+                    // document.querySelector('#username').value = data.username ? data.username : "";
+                    document.querySelector('#website').value = data.dir;
+                    document.querySelector('#password').value = data.password;
+                    start("#edit");
+                    editMode = false;
+                }
             }
             break;
         default:
@@ -181,13 +194,22 @@ function socketMessageListener(evt) {
     }
 }
 
-
+function delete_cred_high_level() {
+    delete_cred(cred_list[current_website].website);
+}
+function edit_cred_high_level() {
+    add_credential(
+        document.querySelector('#email').value,
+        document.querySelector('#username').value,
+        document.querySelector('#password').value,
+        cred_list[current_website].website,
+    )
+}
 function edit(id) {
-    document.querySelector('#email').value = cred_list[id].email;
-    document.querySelector('#username').value = cred_list[id].username;
-    document.querySelector('#website').value = cred_list[id].website;
-    document.querySelector('#password').value = cred_list[id].password;
-    start("#edit");
+    get_credential(cred_list[id - 1].website);
+    editMode = true;
+    current_website = id - 1;
+
 }
 
 function start(x) {
@@ -209,6 +231,9 @@ function start(x) {
     });
 }
 
+function say() {
+    console.log('yooo');
+}
 function hide(id) {
     $(id).modal("hide");
 }

@@ -23,17 +23,17 @@
         <tr>
           <th scope="col">#</th>
           <th scope="col">Website</th>
-          <th scope="col">Email</th>
-          <th scope="col">Username</th>
+          <!-- <th scope="col">Email</th>
+          <th scope="col">Username</th> -->
           <th scope="col">Password</th>
         </tr>
       </thead>
       <tbody id="main_table">
         <tr data-id='1'>
           <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>Otto</td>
+          <td>FaceBook</td>
+          <!-- <td>Otto</td>
+          <td>Otto</td> -->
           <td>***********</td>
         </tr>
       </tbody>
@@ -113,19 +113,19 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Please Connect Device</h4>
+          <h4 class="modal-title">Edit Credentials</h4>
         </div>
         <div class="row">
           <br>
           <div class="col-md-8 col-md-offset-2">
             <div class="login-panel panel panel-default">
               <div class="panel-body">
-                <form role="form" onsubmit="savee(); return false">
+                <form>
                   <fieldset>
                     <div class="input-group form-group">
                       <input id="email" type="text" class="form-control" name="email" placeholder="email" title="email">
-                      <input id="username" type="text" class="form-control" name="username" placeholder="username"
-                        title="username">
+                      <!-- <input id="username" type="text" class="form-control" name="username" placeholder="username"
+                        title="username"> -->
                       <input id="website" type="text" class="form-control" name="website" placeholder="website"
                         title="website">
                       <input id="password" type="text" class="form-control" name="password" placeholder="Password"
@@ -133,7 +133,9 @@
                     </div>
                     <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
                     </div>
-                    <button type="submit" class="btn btn-success btn-md pull-right"
+                    <button type="button" class="btn btn-danger btn-md pull-right"
+                      onclick="delete_cred_high_level()">Delete</button>
+                    <button type="button" class="btn btn-success btn-md pull-right" onclick="edit_cred_high_level()"
                       style="background-color: #337ab7;">Save</button>
                   </fieldset>
                 </form>
