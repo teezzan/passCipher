@@ -156,6 +156,7 @@ function socketMessageListener(evt) {
                 reload();
                 list();
                 hide("#edit");
+                hide("#add");
             }
             break;
         case "delete_credential":
@@ -200,10 +201,38 @@ function delete_cred_high_level() {
 function edit_cred_high_level() {
     add_credential(
         document.querySelector('#email').value,
-        document.querySelector('#username').value,
+        "",
         document.querySelector('#password').value,
         cred_list[current_website].website,
     )
+}
+function add_cred_high_level() {
+    console.log("yaya");
+    if (document.querySelector('#password_add').value != "") {
+
+        add_credential(
+            document.querySelector('#email_add').value,
+            "",
+            document.querySelector('#password_add').value,
+            document.querySelector('#website_add').value,
+        )
+    }
+    else {
+        add_credential_without_password(
+            document.querySelector('#email_add').value,
+            "",
+            document.querySelector('#website_add').value,
+        )
+    }
+}
+
+function add() {
+    document.querySelector('#email').value = "";
+    document.querySelector('#website').value = "";
+    document.querySelector('#password').value = "";
+    start("#add");
+    editMode = false;
+
 }
 function edit(id) {
     get_credential(cred_list[id - 1].website);

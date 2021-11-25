@@ -123,11 +123,9 @@
                 <form>
                   <fieldset>
                     <div class="input-group form-group">
-                      <input id="email" type="text" class="form-control" name="email" placeholder="email" title="email">
-                      <!-- <input id="username" type="text" class="form-control" name="username" placeholder="username"
-                        title="username"> -->
-                      <input id="website" type="text" class="form-control" name="website" placeholder="website"
+                      <input id="website" type="text" class="form-control" name="website" placeholder="website" readonly
                         title="website">
+                      <input id="email" type="text" class="form-control" name="email" placeholder="email" title="email">
                       <input id="password" type="text" class="form-control" name="password" placeholder="Password"
                         title="password">
                     </div>
@@ -146,8 +144,47 @@
       </div>
     </div>
   </div>
+  <div id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
-
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Credentials</h4>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-8 col-md-offset-2">
+            <div class="login-panel panel panel-default">
+              <div class="panel-body">
+                <form>
+                  <fieldset>
+                    <div class="input-group form-group">
+                      <input id="email_add" type="text" class="form-control" name="email" placeholder="email"
+                        title="email">
+                      <input id="website_add" type="text" class="form-control" name="website" placeholder="website"
+                        title="website">
+                      <input id="password_add" type="text" class="form-control" name="password" placeholder="Password"
+                        title="password">
+                    </div>
+                    <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
+                    </div>
+                    <button type="button" class="btn btn-success btn-md pull-right" onclick="add_cred_high_level()"
+                      style="background-color: #337ab7;">Save</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-success btn-md pull-right" onclick="add()"
+    style="background-color: #337ab7;">Add Credential</button>
+  <!-- <a href="#" class="float-special">
+    <i class="glyphicon glyphicon-plus my-float"></i>
+  </a> -->
 
   <script src="js/required.js"></script>
   <script src="js/lib.js"></script>
