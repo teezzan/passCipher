@@ -106,12 +106,15 @@ const char *const alphaunNum[] MEMMODE = {" 0123456789abcdefghijklmnopqrstuvwxyz
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "ivqv1l"; //field will initialize its size by this string length
+char pin[] = "n46i3j"; //field will initialize its size by this string length
 char password[] = "                               ";
 char email[] = "t@gmail.com";
 char username[] = "tedfeggg";
 char website[] = "twitter";
 int state = 0;
+
+String ssid="";
+String wifi_password="";
 
 int chooseTest = -1;
 ///////////////////////////////////////////////////////////////////
@@ -357,7 +360,7 @@ result showPasswordEvent(eventMask e)
 
 result onWSServer(eventMask e)
 {
-  WiFi.begin("HassanSpot", "xxxxxxxx" );
+  WiFi.begin(ssid.c_str(), wifi_password.c_str() );
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -370,6 +373,7 @@ result onWSServer(eventMask e)
   Serial.println(WiFi.localIP());
   ws.onEvent(onWsEvent);
   server.addHandler(&ws);
+
   server.begin();
 
   return proceed;
@@ -485,6 +489,9 @@ void setup() {
 
   bleKeyboard.begin();
   read_user_number(SPIFFS);
+  read_ssid(SPIFFS);
+//  read_pass(SPIFFS);
+//  
   //    itoa(random(100000000, 999999999), key, 32);
   //    randomString();
   //    save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key );
@@ -496,7 +503,7 @@ void loop()
 {
   //  readTypeCredentials("3928", pin );
   //  delay(2000);
-//  readKey();
+  //  readKey();
   nav.poll();
 
 }

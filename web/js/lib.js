@@ -36,7 +36,7 @@ function authorize(pass) {
 function login(pass) {
     let data = {
         command: "login",
-        pass: "ivqv1l"
+        pass
     }
     websock.send(JSON.stringify(data));
 }
@@ -70,34 +70,54 @@ function reload() {
     websock.send(JSON.stringify(data));
 }
 
+function restart() {
+    console.log("restart");
+    let data = {
+        command: "restart"
+    }
+    websock.send(JSON.stringify(data));
+    location.reload();
+}
+
 function add_credential(email, username, password, website) {
-    if (!email || !username || !password || !website) {
-        alert("Empty fields not allowed")
+
+    let data = {
+        command: "add_credential",
+        email,
+        username,
+        password,
+        website
     }
-    else {
-        let data = {
-            command: "add_credential",
-            email,
-            username,
-            password,
-            website
-        }
-        websock.send(JSON.stringify(data));
+    websock.send(JSON.stringify(data));
+
+}
+function add_wifi_credential(ssid, pass) {
+
+    let data = {
+        command: "edit_wifi_credential",
+        ssid,
+        pass
     }
+    websock.send(JSON.stringify(data));
+
+}
+function add_wifi_credential_high_level() {
+    add_wifi_credential(
+        document.querySelector('#ssid').value,
+        document.querySelector('#key').value,
+    )
+
 }
 function add_credential_without_password(email, username, website) {
-    if (!email || !username || !website) {
-        alert("Empty fields not allowed")
-    } else {
 
-        let data = {
-            command: "add_credential_gen_password",
-            email,
-            username,
-            website
-        }
-        websock.send(JSON.stringify(data));
+    let data = {
+        command: "add_credential_gen_password",
+        email,
+        username,
+        website
     }
+    websock.send(JSON.stringify(data));
+
 }
 
 function populate_credentials(cred) {
@@ -158,6 +178,13 @@ function socketMessageListener(evt) {
                 populate_credentials(data.credentials)
                 console.log(cred_list);
                 show_cred_table()
+            }
+            break;
+        case "wifi":
+            if (data.state = "success") {
+                document.querySelector('#ssid').value = "";
+                document.querySelector('#key').value = "";
+                hide("#settings")
             }
             break;
         case "add_credential":
@@ -237,9 +264,9 @@ function add_cred_high_level() {
 }
 
 function add() {
-    document.querySelector('#email').value = "";
-    document.querySelector('#website').value = "";
-    document.querySelector('#password').value = "";
+    document.querySelector('#email_add').value = "";
+    document.querySelector('#website_add').value = "";
+    document.querySelector('#password_add').value = "";
     start("#add");
     editMode = false;
 

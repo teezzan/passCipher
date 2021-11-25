@@ -163,6 +163,22 @@ void onWsEvent(AsyncWebSocket * server, AsyncWebSocketClient * client, AwsEventT
           send_state(true, "add_credential");
 
         }
+        else if ((strcmp(command, "edit_wifi_credential")  == 0) && auth) {
+          char ssid[64];
+          char pass[64];
+          strcpy(ssid, obj["ssid"]);
+          strcpy(pass, obj["pass"]);
+          DynamicJsonDocument  dox(600);
+          
+          dox["ssid"] = String(ssid);
+          dox["pass"] = String(pass) ;
+
+          String buf;
+          serializeJson(dox, buf);
+          update_ssid(SPIFFS, buf.c_str());
+          send_state(true, "wifi");
+
+        }
         else if ((strcmp(command, "add_credential_gen_password")  == 0) && auth) {
           char email[64];
           char username[64];

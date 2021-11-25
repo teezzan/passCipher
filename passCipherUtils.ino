@@ -414,3 +414,57 @@ int readKeyReturnVal() {
   }
 
 }
+
+
+bool read_ssid(fs::FS &fs) {
+  File file = fs.open("/key.txt", FILE_READ);
+
+  if (!file) {
+    Serial.println("- failed to open file for writing");
+    return false;
+  }
+  int i = 0;
+  char ssid_ar[350] = "";
+  while (file.available()) {
+    ssid_ar[i] = file.read();
+    i++;
+  }
+
+  DynamicJsonDocument  doc(400);
+  DeserializationError error = deserializeJson(doc, String(ssid_ar));
+  if (error) {
+    Serial.print(F("deserializeJson() failed: "));
+    Serial.println(error.c_str());
+    return false;
+  }
+  JsonObject obj = doc.as<JsonObject>();
+  wifi_password = obj["pass"].as<String>();;
+  ssid = obj["ssid"].as<String>();;
+  Serial.println(ssid);
+  Serial.println(wifi_password);
+
+  file.close();
+  return true;
+
+
+}
+
+
+bool update_ssid(fs::FS &fs,  const char * message) {
+
+  File file = fs.open("/key.txt", FILE_WRITE);
+
+  if (!file) {
+    Serial.println("- failed to open file for writing");
+    return false;
+  }
+  if (file.print(message)) {
+    Serial.println("- file written");
+  } else {
+    Serial.println("- write failed");
+  }
+  Serial.println(" Done Writing ");
+
+  return true;
+
+}

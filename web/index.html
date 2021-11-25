@@ -88,10 +88,10 @@
           <div class="col-md-8 col-md-offset-2">
             <div class="login-panel panel panel-default">
               <div class="panel-body">
-                <form role="form" onsubmit="login(); return false">
+                <form role="form" onsubmit="login(document.querySelector('#login_pass').value); return false">
                   <fieldset>
                     <div class="input-group form-group">
-                      <input id="pass" type="password" class="form-control" name="password" placeholder="Password"
+                      <input id="login_pass" type="password" class="form-control" name="password" placeholder="Password"
                         title="Please enter your password">
                     </div>
                     <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
@@ -180,8 +180,44 @@
       </div>
     </div>
   </div>
-  <button type="button" class="btn btn-success btn-md pull-right" onclick="add()"
-    style="background-color: #337ab7;">Add Credential</button>
+  <div id="settings" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Wifi Credential</h4>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-8 col-md-offset-2">
+            <div class="login-panel panel panel-default">
+              <div class="panel-body">
+                <form>
+                  <fieldset>
+                    <div class="input-group form-group">
+                      <input id="ssid" type="text" class="form-control" name="ssid" placeholder="SSID"
+                        title="ssid">
+                      <input id="key" type="text" class="form-control" name="key" placeholder="password"
+                        title="key">
+                    </div>
+                    <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
+                    </div>
+                    <button type="button" class="btn btn-success btn-md pull-right" onclick="add_wifi_credential_high_level()"
+                      style="background-color: #337ab7;">Save</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="button" class="btn btn-danger btn-md pull-right" onclick="restart()">LogOut</button>
+  <button type="button" class="btn btn-info btn-md pull-right" onclick="start('#settings')">Settings</button>
+  <button type="button" class="btn btn-success btn-md pull-right" onclick="add()" style="background-color: #337ab7;">Add
+    Credential</button>
   <!-- <a href="#" class="float-special">
     <i class="glyphicon glyphicon-plus my-float"></i>
   </a> -->
