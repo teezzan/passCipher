@@ -10,58 +10,152 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>Skrypt</title>
+  <title>passCipher</title>
   <!-- Bootstrap core CSS -->
   <link href="css/required.css" rel="stylesheet">
-  <link rel="stylesheet" href="ui.css">
 </head>
 
 <body>
-  <div class="container-fluid">
+  <div class="container">
 
-    <table class="table table-striped">
+    <table class="table table-hover ">
       <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Website</th>
+          <th scope="col">Email</th>
+          <th scope="col">Username</th>
+          <th scope="col">Password</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
+      <tbody id="main_table">
+        <tr data-id='1'>
           <th scope="row">1</th>
           <td>Mark</td>
           <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-          <td>
-            <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-secondary">Left</button>
-              <button type="button" class="btn btn-secondary">Middle</button>
-              <button type="button" class="btn btn-secondary">Right</button>
-            </div>
-          </td>
+          <td>Otto</td>
+          <td>***********</td>
         </tr>
       </tbody>
     </table>
+  </div>
 
+
+  <div id="signin" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Please Connect Device</h4>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-8 col-md-offset-2">
+            <div class="login-panel panel panel-default">
+              <div class="panel-body">
+                <form role="form" onsubmit="connectWS(); return false">
+                  <fieldset>
+                    <div class="input-group form-group">
+                      <input id="ip" type="text" class="form-control" name="ip" placeholder="ip"
+                        title="Please enter your ip">
+                      <input id="pin" type="password" class="form-control" name="password" placeholder="Password"
+                        value="ddro89" title="Please enter your password">
+                    </div>
+                    <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
+                    </div>
+                    <button type="submit" class="btn btn-success btn-md pull-right"
+                      style="background-color: #337ab7;">Connect</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="login" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Please Login</h4>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-8 col-md-offset-2">
+            <div class="login-panel panel panel-default">
+              <div class="panel-body">
+                <form role="form" onsubmit="login(); return false">
+                  <fieldset>
+                    <div class="input-group form-group">
+                      <input id="pass" type="password" class="form-control" name="password" placeholder="Password"
+                        title="Please enter your password">
+                    </div>
+                    <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
+                    </div>
+                    <button type="submit" class="btn btn-success btn-md pull-right"
+                      style="background-color: #337ab7;">Login</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Please Connect Device</h4>
+        </div>
+        <div class="row">
+          <br>
+          <div class="col-md-8 col-md-offset-2">
+            <div class="login-panel panel panel-default">
+              <div class="panel-body">
+                <form role="form" onsubmit="savee(); return false">
+                  <fieldset>
+                    <div class="input-group form-group">
+                      <input id="email" type="text" class="form-control" name="email" placeholder="email" title="email">
+                      <input id="username" type="text" class="form-control" name="username" placeholder="username"
+                        title="username">
+                      <input id="website" type="text" class="form-control" name="website" placeholder="website"
+                        title="website">
+                      <input id="password" type="text" class="form-control" name="password" placeholder="Password"
+                        title="password">
+                    </div>
+                    <div id="password_warning" class="alert alert-warning" style="display: none;">Password incorrect
+                    </div>
+                    <button type="submit" class="btn btn-success btn-md pull-right"
+                      style="background-color: #337ab7;">Save</button>
+                  </fieldset>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 
 
   <script src="js/required.js"></script>
+  <script src="js/lib.js"></script>
+  <script>
+    $('.table > tbody > tr').click(function () {
+      console.log("clicked", $(this).data("id"));
+      edit($(this).data("id"));
+    });
+  </script>
+  <script>start('#signin');</script>
 </body>
 
 </html>
