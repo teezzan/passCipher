@@ -106,15 +106,15 @@ const char *const alphaunNum[] MEMMODE = {" 0123456789abcdefghijklmnopqrstuvwxyz
 //individual character validators
 const char *constMEM validData[] MEMMODE = {hexChars, hexChars, hexChars, hexChars};
 
-char pin[] = "n46i3j"; //field will initialize its size by this string length
+char pin[] = "sahscm"; //field will initialize its size by this string length
 char password[] = "                               ";
 char email[] = "t@gmail.com";
 char username[] = "tedfeggg";
 char website[] = "twitter";
 int state = 0;
 
-String ssid="";
-String wifi_password="";
+String ssid = "";
+String wifi_password = "";
 
 int chooseTest = -1;
 ///////////////////////////////////////////////////////////////////
@@ -146,23 +146,25 @@ result showListEvent(eventMask e)
 
   int escape = 0;
   int inp = -1;;
+  String inp_ = "";
   int index = 0;
   //  oled.clear();
   while (escape == 0) {
-    inp = readKeyReturnVal();
-    if (inp != -1) {
+//    inp = readKeyReturnVal();
+    inp_ = Serial.readString();
+    if (inp != -1 || inp_ != "") {
 
-      if (inp == 5) {
+      if (inp == 5 || inp_ == "+\n") {
         if (index != 11)//TBD
           index++;
-      } else if (inp == 4) {
+      } else if (inp == 4 || inp_ == "-\n") {
         if (index != 0)
           index--;
       }
-      else if (inp == 3) {
+      else if (inp == 3 || inp_ == "/\n") {
         escape = -1;
       }
-      else if (inp == 2) {
+      else if (inp == 2 || inp_ == "*\n") {
         escape = 1;
       }
       Serial.print(inp);
@@ -226,6 +228,7 @@ result authEvent(eventMask e)
 result displayEvent(eventMask e)
 {
   bool inp = false;
+  String inp_ = "";
   oled.clear();
   oled.setCursor(0, 0);
   oled.println(user_out.email);
@@ -238,6 +241,10 @@ result displayEvent(eventMask e)
       delay(SOFT_DEBOUNCE_MS);
       while (analogRead(INP) != 4095);
       delay(SOFT_DEBOUNCE_MS);
+      inp = true;
+    }
+    inp_ = Serial.readString();
+    if(inp_ == "*\n"){
       inp = true;
     }
   }
@@ -363,19 +370,41 @@ result onWSServer(eventMask e)
   WiFi.begin(ssid.c_str(), wifi_password.c_str() );
 
   while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
+    oled.clear();
+    oled.setCursor(0, 0);
+    oled.println("Connecting.");
+    delay(100);
     Serial.print(".");
+    oled.setCursor(0, 20);
+    oled.print(".");
+    delay(200);
+    oled.print(".");
+    delay(200);
+    oled.print(".");
+
   }
 
   Serial.println("");
   Serial.println("WiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+  oled.clear();
+  oled.setCursor(0, 0);
+  oled.println("WiFi connected.");
+  oled.println(ssid);
+  oled.println("IP address: ");
+  oled.println(WiFi.localIP());
+
+
   ws.onEvent(onWsEvent);
   server.addHandler(&ws);
 
   server.begin();
-
+  while (true){
+    delay(60000);
+  }
+  
+ 
   return proceed;
 
 
@@ -478,7 +507,8 @@ void setup() {
 
 
   Serial.println("menu 4.x test"); Serial.flush();
-  Wire.begin(4, 15);
+  //  Wire.begin(4, 15);
+  Wire.begin(4, 5);
   oled.begin(&Adafruit128x64, I2C_ADDRESS, 16);
   oled.setFont(menuFont);
 
@@ -490,8 +520,8 @@ void setup() {
   bleKeyboard.begin();
   read_user_number(SPIFFS);
   read_ssid(SPIFFS);
-//  read_pass(SPIFFS);
-//  
+  //  read_pass(SPIFFS);
+  //
   //    itoa(random(100000000, 999999999), key, 32);
   //    randomString();
   //    save_user_credential("fb", password_buf, "teehazzan@gmail.com", "greentestcred", key );
